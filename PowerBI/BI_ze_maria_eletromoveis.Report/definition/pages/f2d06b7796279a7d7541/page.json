@@ -1,8 +1,55 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "f2d06b7796279a7d7541",
-  "displayName": "Página 1",
-  "displayOption": "FitToPage",
-  "height": 1080,
-  "width": 1920
+  "displayName": "Resumo Geral",
+  "displayOption": "ActualSize",
+  "height": 1250,
+  "width": 2000,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Painel de Resultados — 2000×1250@1x.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "Painel_de_Resultados___2000_126518321559244589.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "92500669ef1b4b9bea98",
+      "target": "9c308c31ead0bcc0a728",
+      "type": "NoFilter"
+    },
+    {
+      "source": "053a4c3e13f7c0578644",
+      "target": "9c308c31ead0bcc0a728",
+      "type": "NoFilter"
+    }
+  ]
 }

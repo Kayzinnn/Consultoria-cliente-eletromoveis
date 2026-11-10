@@ -24,8 +24,24 @@
           }
         }
       }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
     ]
   },
+  "publicCustomVisuals": [
+    "htmlContent443BE3AD55E043BF878BED274D3A6855"
+  ],
   "resourcePackages": [
     {
       "name": "SharedResources",
@@ -35,6 +51,22 @@
           "name": "Fluent2-CY26SU10",
           "path": "BaseThemes/Fluent2-CY26SU10.json",
           "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "Painel_de_Resultados___2000_126518321559244589.png",
+          "path": "Painel_de_Resultados___2000_126518321559244589.png",
+          "type": "Image"
+        },
+        {
+          "name": "Painel_de_Resultados_Vendas_2000x1250.png",
+          "path": "Painel_de_Resultados_Vendas_2000x1250.png",
+          "type": "Image"
         }
       ]
     }

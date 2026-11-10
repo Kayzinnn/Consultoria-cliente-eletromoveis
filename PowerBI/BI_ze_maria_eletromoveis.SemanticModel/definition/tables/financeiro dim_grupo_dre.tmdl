@@ -6,6 +6,7 @@ table 'financeiro dim_grupo_dre'
 		lineageTag: 4126b9e0-71ee-48ba-a3d9-95eeeb706b80
 		summarizeBy: none
 		sourceColumn: grupo_dre
+		sortByColumn: ordem
 
 		annotation SummarizationSetBy = Automatic
 

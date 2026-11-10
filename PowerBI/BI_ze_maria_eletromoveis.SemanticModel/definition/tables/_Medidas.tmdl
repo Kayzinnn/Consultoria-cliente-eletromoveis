@@ -233,6 +233,342 @@ table _Medidas
 		displayFolder: 06 Comparativos
 		lineageTag: 19a36fd9-7e6b-45bf-a95e-f3de9fe9a581
 
+	/// Último dia do período filtrado que tem venda carregada. Base dos acumulados do painel.
+	measure 'Data de Referência' = VAR _ult = CALCULATE(MAX('financeiro vw_fato_principal'[data]), REMOVEFILTERS('financeiro vw_fato_principal'), 'financeiro vw_fato_principal'[origem] = "ERP vendas") RETURN CALCULATE(MAX(d_Calendario[Date]), d_Calendario[Date] <= _ult)
+		formatString: dd/mm/yyyy
+		displayFolder: 07 Painel Resultados
+		lineageTag: da0db207-f614-4fb0-9ee9-d1f6febec216
+
+	/// Receita líquida de 1º de janeiro até a data de referência.
+	measure 'Vendas Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Líquida], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: 53ac7ac8-4655-4adc-8618-68da75161fb2
+
+	measure 'Vendas Acum Ano Anterior' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Líquida], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: 800a6786-6044-47b3-9361-8309b1b2f781
+
+	measure 'Vendas Acum Texto' = VAR _a = [Vendas Acum Ano Anterior] VAR _v = DIVIDE([Vendas Acum] - _a, _a) RETURN IF(ISBLANK(_a), "sem dados do ano anterior", FORMAT(_v, "+0.0%;-0.0%") & " vs mesmo período do ano anterior")
+		displayFolder: 07 Painel Resultados
+		lineageTag: 7c16ae46-5353-48a9-adb4-85060ce929a1
+
+	measure 'Lucro Bruto Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Lucro Bruto], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: 59af4d43-bf5b-4725-9026-cfde39947f35
+
+	/// Margem bruta acumulada: o que sobra da venda após o custo dos produtos.
+	measure 'Ganho na Venda Acum %' = DIVIDE([Lucro Bruto Acum], [Vendas Acum])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 07 Painel Resultados
+		lineageTag: 11e97c97-2e1d-4e46-9a85-678bc2bd9eea
+
+	measure 'Ganho na Venda Acum % Ano Anterior' = DIVIDE(VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Lucro Bruto], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario))), [Vendas Acum Ano Anterior])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 07 Painel Resultados
+		lineageTag: 08f2ec06-d2b8-4cef-b32b-06073083a00c
+
+	measure 'Ganho na Venda Texto' = VAR _a = [Ganho na Venda Acum % Ano Anterior] RETURN IF(ISBLANK(_a), "sobra após pagar os produtos", FORMAT(([Ganho na Venda Acum %] - _a) * 100, "+0.0;-0.0") & " p.p. vs ano anterior")
+		displayFolder: 07 Painel Resultados
+		lineageTag: 59f064bd-c017-4f2e-8446-c11b8afbb841
+
+	/// Custo das trocas e devoluções (o ERP não informa quebra/furto).
+	measure 'Perdas Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV - trocas e devoluções"), DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: e8d2eaad-32f6-4fab-9182-b8a08d2b4334
+
+	measure 'Perdas Texto' = FORMAT(DIVIDE([Perdas Acum], [Vendas Acum]), "0.0%") & " das vendas · trocas e devoluções"
+		displayFolder: 07 Painel Resultados
+		lineageTag: 58297f51-1678-4686-a2fa-2375b4fe0676
+
+	/// Despesas operacionais do caixa (positivo).
+	measure 'Despesas da Loja Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Despesas Operacionais], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: 54374257-7105-4838-bce4-f6b5ec78e849
+
+	measure 'Despesas da Loja Texto' = FORMAT(DIVIDE([Despesas da Loja Acum], [Vendas Acum]), "0.0%") & " das vendas · pessoal, ocupação e contas"
+		displayFolder: 07 Painel Resultados
+		lineageTag: 17830b78-8786-4786-a94a-807bf8736d66
+
+	measure 'Lucro Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: 733a3a97-d359-4810-941f-0af1327277c2
+
+	measure 'Margem de Lucro Acum %' = DIVIDE([Lucro Acum], [Vendas Acum])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 07 Painel Resultados
+		lineageTag: 0356bac2-430f-4644-9866-f4861fdc1525
+
+	measure 'Lucro Texto' = FORMAT([Margem de Lucro Acum %], "0.0%") & " de margem sobre as vendas"
+		displayFolder: 07 Painel Resultados
+		lineageTag: 3bc42914-5b14-42cd-ba7d-bb46d8aedb7b
+
+	/// Placeholder até termos a fonte de estoque.
+	measure Estoque = "Sem dados"
+		displayFolder: 07 Painel Resultados
+		lineageTag: faea3dd0-449b-4adb-863e-27e2c2916aa0
+
+	measure 'Estoque Texto' = "aguardando a base de estoque"
+		displayFolder: 07 Painel Resultados
+		lineageTag: 515c403a-14b8-4de5-b149-0e029f72076b
+
+	/// Valor de cada linha da DRE no acumulado (cascata).
+	measure 'DRE Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: 7276d617-bb3f-4eb5-9b33-200ba8b3d282
+
+	/// Últimos 12 meses até a última venda, ignorando o filtro de período.
+	measure 'Vendas 12M' = VAR _ult = CALCULATE(MAX('financeiro vw_fato_principal'[data]), REMOVEFILTERS('financeiro vw_fato_principal'), 'financeiro vw_fato_principal'[origem] = "ERP vendas") VAR _ini = EOMONTH(_ult, -12) + 1 RETURN IF(MAX(d_Calendario[Date]) >= _ini && MIN(d_Calendario[Date]) <= _ult, [Receita Líquida])
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: 3d6a83e7-89b5-49d1-b43f-04f7a0490c0f
+
+	/// Últimos 12 meses até a última venda, ignorando o filtro de período.
+	measure 'Lucro 12M' = VAR _ult = CALCULATE(MAX('financeiro vw_fato_principal'[data]), REMOVEFILTERS('financeiro vw_fato_principal'), 'financeiro vw_fato_principal'[origem] = "ERP vendas") VAR _ini = EOMONTH(_ult, -12) + 1 RETURN IF(MAX(d_Calendario[Date]) >= _ini && MIN(d_Calendario[Date]) <= _ult, [Resultado])
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 07 Painel Resultados
+		lineageTag: c53c5b11-31b3-4d23-939e-209aec32dc42
+
+	measure 'Qtd Vendida Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Qtd Vendida], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: #,##0
+		displayFolder: 08 Vendas Analítico
+		lineageTag: ffd99610-f106-4bdc-b45d-e1dd4e4c6e7a
+
+	measure 'Receita Bruta Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Bruta], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 08 Vendas Analítico
+		lineageTag: 2b9b5948-b854-4c1e-bd58-068c29a0f059
+
+	/// Negativo = desconto concedido; positivo = acréscimo (ex.: juros do crediário).
+	measure 'Descontos Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Descontos e Acréscimos], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 08 Vendas Analítico
+		lineageTag: 4c76a21e-eeba-452e-a811-add2601833b5
+
+	/// Custo dos produtos vendidos (positivo), sem trocas/devoluções.
+	measure 'CMV Produtos Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV"), DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 08 Vendas Analítico
+		lineageTag: 67090f19-68f1-407e-be9c-ed87fd9090f2
+
+	measure 'Lucro Bruto Produtos Acum' = [Vendas Acum] - [CMV Produtos Acum]
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 08 Vendas Analítico
+		lineageTag: ba3eba00-57af-43e3-90f2-93521ef64218
+
+	measure 'Margem Bruta Produtos Acum %' = DIVIDE([Lucro Bruto Produtos Acum], [Vendas Acum])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 08 Vendas Analítico
+		lineageTag: 287dc824-c00f-47ff-977f-1bb8253d2463
+
+	measure 'Preço Médio Acum' = DIVIDE([Receita Bruta Acum], [Qtd Vendida Acum])
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 08 Vendas Analítico
+		lineageTag: 9bb6226e-20b4-43d0-ac5a-54c1b4fe120b
+
+	/// Peso da linha nas vendas do que está filtrado.
+	measure 'Participação nas Vendas %' = DIVIDE([Vendas Acum], CALCULATE([Vendas Acum], ALLSELECTED('financeiro vw_fato_principal'[grupo_produto], 'financeiro vw_fato_principal'[categoria_produto], 'financeiro vw_fato_principal'[descricao])))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 08 Vendas Analítico
+		lineageTag: 8f73207c-5a27-4a89-957c-fbf24f46c21f
+
+	measure 'Vendas Var % Ano Anterior' = VAR _a = [Vendas Acum Ano Anterior] RETURN IF(NOT ISBLANK(_a), DIVIDE([Vendas Acum] - _a, _a))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 08 Vendas Analítico
+		lineageTag: c8a642e2-5141-45fe-98a5-ba157fcdc1eb
+
+	measure 'Última Venda' = CALCULATE(MAX('financeiro vw_fato_principal'[data]), 'financeiro vw_fato_principal'[natureza] = "Receita")
+		formatString: dd/mm/yyyy
+		displayFolder: 08 Vendas Analítico
+		lineageTag: 205f60f2-a0ba-441c-8649-4fea02a78901
+
+	measure 'Perdas Acum Ano Anterior' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV - trocas e devoluções"), DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 09 Cards HTML
+		lineageTag: 3606f5a1-791d-4d13-bf10-66d7cfdc7fe2
+
+	measure 'Perdas % Vendas' = DIVIDE([Perdas Acum], [Vendas Acum])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 09 Cards HTML
+		lineageTag: 7002d2df-b7ab-47e1-bb97-07684bb1ab4e
+
+	measure 'Perdas % Vendas Ano Anterior' = DIVIDE([Perdas Acum Ano Anterior], [Vendas Acum Ano Anterior])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 09 Cards HTML
+		lineageTag: 222928af-9959-48dc-8be5-4187076be005
+
+	measure 'Despesas da Loja Acum Ano Anterior' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Despesas Operacionais], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 09 Cards HTML
+		lineageTag: f1d0f9fc-4470-4d75-bccb-ae02f136acce
+
+	measure 'Lucro Acum Ano Anterior' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 09 Cards HTML
+		lineageTag: 420e890a-f361-4e67-9007-568c82343e16
+
+	/// HTML do card (use no visual HTML Content).
+	measure 'Card Vendas' =
+			VAR _ref = [Data de Referência]
+			VAR _valor = VAR _x = [Vendas Acum] VAR _s = IF(_x < 0, "-", "") VAR _y = ABS(_x) RETURN IF(ISBLANK(_x), "—", _s & "R$ " & IF(_y >= 1000000, FORMAT(_y / 1000000, "#,0.00") & " mi", IF(_y >= 10000, FORMAT(_y / 1000, "#,0") & " mil", IF(_y >= 1000, FORMAT(_y / 1000, "#,0.0") & " mil", FORMAT(_y, "#,0")))))
+			VAR _a = [Vendas Acum]
+			VAR _b = [Vendas Acum Ano Anterior]
+			VAR _tem = NOT ISBLANK(_a) && NOT ISBLANK(_b) && _b <> 0
+			VAR _d = IF(_tem, DIVIDE(_a - _b, ABS(_b)))
+			VAR _bom = _d >= 0
+			VAR _cor = IF(NOT _tem, "#4B5563", IF(_bom, "#1F47B3", "#A3400E"))
+			VAR _fundo = IF(NOT _tem, "#EEF0F4", IF(_bom, "#EDF1FC", "#FCEFE7"))
+			VAR _periodo = "jan–" & FORMAT(EDATE(_ref, -12), "mmm/yy")
+			VAR _selo = IF(_tem, IF(_d >= 0, "&#8599; ", "&#8600; ") & FORMAT(ABS(_d), "0.0%"), "sem comparação")
+			VAR _texto = IF(_tem, IF(_d >= 0, "a mais que ", "a menos que ") & _periodo, "sem dados do ano anterior")
+			RETURN
+			    IF(NOT ISBLANK(_ref),
+			        "<div style='font-family:Manrope,""Segoe UI"",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:2px 4px;box-sizing:border-box;width:100%'>"
+			        & "<div style='font-size:28px;font-weight:800;letter-spacing:-0.02em;color:#111827;line-height:1.15;margin-bottom:2px'>" & _valor & "</div>"
+			        & "<div style='display:flex;flex-direction:column;align-items:center;gap:6px'>"
+			        & IF(_tem, "<span style='display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:" & _cor & ";background:" & _fundo & ";padding:3px 8px;border-radius:999px;white-space:nowrap'>" & _selo & "</span>", "")
+			        & "<span style='font-size:12px;color:#6B7280;line-height:1.4'>" & _texto & "</span>"
+			        & "</div></div>"
+			    )
+		displayFolder: 09 Cards HTML
+		lineageTag: a38dd3aa-c0e1-41f7-b5cc-82eb1c5db891
+
+	/// HTML do card (use no visual HTML Content).
+	measure 'Card Ganho na Venda' =
+			VAR _ref = [Data de Referência]
+			VAR _valor = FORMAT([Ganho na Venda Acum %], "0.0%")
+			VAR _a = [Ganho na Venda Acum %]
+			VAR _b = [Ganho na Venda Acum % Ano Anterior]
+			VAR _tem = NOT ISBLANK(_a) && NOT ISBLANK(_b) && _b <> 0
+			VAR _d = IF(_tem, (_a - _b) * 100)
+			VAR _bom = _d >= 0
+			VAR _cor = IF(NOT _tem, "#4B5563", IF(_bom, "#1F47B3", "#A3400E"))
+			VAR _fundo = IF(NOT _tem, "#EEF0F4", IF(_bom, "#EDF1FC", "#FCEFE7"))
+			VAR _periodo = "jan–" & FORMAT(EDATE(_ref, -12), "mmm/yy")
+			VAR _selo = IF(_tem, IF(_d >= 0, "&#8599; ", "&#8600; ") & FORMAT(ABS(_d), "0.0") & IF(ABS(_d) < 2, " ponto", " pontos"), "sem comparação")
+			VAR _texto = IF(_tem, "vs " & _periodo, "sobra após pagar os produtos")
+			RETURN
+			    IF(NOT ISBLANK(_ref),
+			        "<div style='font-family:Manrope,""Segoe UI"",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:2px 4px;box-sizing:border-box;width:100%'>"
+			        & "<div style='font-size:28px;font-weight:800;letter-spacing:-0.02em;color:#111827;line-height:1.15;margin-bottom:2px'>" & _valor & "</div>"
+			        & "<div style='display:flex;flex-direction:column;align-items:center;gap:6px'>"
+			        & IF(_tem, "<span style='display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:" & _cor & ";background:" & _fundo & ";padding:3px 8px;border-radius:999px;white-space:nowrap'>" & _selo & "</span>", "")
+			        & "<span style='font-size:12px;color:#6B7280;line-height:1.4'>" & _texto & "</span>"
+			        & "</div></div>"
+			    )
+		displayFolder: 09 Cards HTML
+		lineageTag: bab5211b-b38b-4376-9402-b81fd796a927
+
+	/// HTML do card (use no visual HTML Content).
+	measure 'Card Perdas' =
+			VAR _ref = [Data de Referência]
+			VAR _valor = VAR _x = [Perdas Acum] VAR _s = IF(_x < 0, "-", "") VAR _y = ABS(_x) RETURN IF(ISBLANK(_x), "—", _s & "R$ " & IF(_y >= 1000000, FORMAT(_y / 1000000, "#,0.00") & " mi", IF(_y >= 10000, FORMAT(_y / 1000, "#,0") & " mil", IF(_y >= 1000, FORMAT(_y / 1000, "#,0.0") & " mil", FORMAT(_y, "#,0")))))
+			VAR _a = [Perdas % Vendas]
+			VAR _b = [Perdas % Vendas Ano Anterior]
+			VAR _tem = NOT ISBLANK(_a) && NOT ISBLANK(_b) && _b <> 0
+			VAR _d = IF(_tem, (_a - _b) * 100)
+			VAR _bom = _d <= 0
+			VAR _cor = IF(NOT _tem, "#4B5563", IF(_bom, "#1F47B3", "#A3400E"))
+			VAR _fundo = IF(NOT _tem, "#EEF0F4", IF(_bom, "#EDF1FC", "#FCEFE7"))
+			VAR _periodo = "jan–" & FORMAT(EDATE(_ref, -12), "mmm/yy")
+			VAR _selo = IF(_tem, IF(_d >= 0, "&#8599; ", "&#8600; ") & FORMAT(ABS(_d), "0.0") & IF(ABS(_d) < 2, " ponto", " pontos"), "sem comparação")
+			VAR _texto = IF(_tem, "vs " & _periodo, "trocas e devoluções")
+			RETURN
+			    IF(NOT ISBLANK(_ref),
+			        "<div style='font-family:Manrope,""Segoe UI"",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:2px 4px;box-sizing:border-box;width:100%'>"
+			        & "<div style='font-size:28px;font-weight:800;letter-spacing:-0.02em;color:#111827;line-height:1.15;margin-bottom:2px'>" & _valor & "</div>"
+			        & "<div style='display:flex;flex-direction:column;align-items:center;gap:6px'>"
+			        & IF(_tem, "<span style='display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:" & _cor & ";background:" & _fundo & ";padding:3px 8px;border-radius:999px;white-space:nowrap'>" & _selo & "</span>", "")
+			        & "<span style='font-size:12px;color:#6B7280;line-height:1.4'>" & _texto & "</span>"
+			        & "</div></div>"
+			    )
+		displayFolder: 09 Cards HTML
+		lineageTag: bffc3b01-e6c0-494d-a4c2-8deee83b5ad0
+
+	/// HTML do card (use no visual HTML Content).
+	measure 'Card Despesas' =
+			VAR _ref = [Data de Referência]
+			VAR _valor = VAR _x = [Despesas da Loja Acum] VAR _s = IF(_x < 0, "-", "") VAR _y = ABS(_x) RETURN IF(ISBLANK(_x), "—", _s & "R$ " & IF(_y >= 1000000, FORMAT(_y / 1000000, "#,0.00") & " mi", IF(_y >= 10000, FORMAT(_y / 1000, "#,0") & " mil", IF(_y >= 1000, FORMAT(_y / 1000, "#,0.0") & " mil", FORMAT(_y, "#,0")))))
+			VAR _a = [Despesas da Loja Acum]
+			VAR _b = [Despesas da Loja Acum Ano Anterior]
+			VAR _tem = NOT ISBLANK(_a) && NOT ISBLANK(_b) && _b <> 0
+			VAR _d = IF(_tem, DIVIDE(_a - _b, ABS(_b)))
+			VAR _bom = _d <= 0
+			VAR _cor = IF(NOT _tem, "#4B5563", IF(_bom, "#1F47B3", "#A3400E"))
+			VAR _fundo = IF(NOT _tem, "#EEF0F4", IF(_bom, "#EDF1FC", "#FCEFE7"))
+			VAR _periodo = "jan–" & FORMAT(EDATE(_ref, -12), "mmm/yy")
+			VAR _selo = IF(_tem, IF(_d >= 0, "&#8599; ", "&#8600; ") & FORMAT(ABS(_d), "0.0%"), "sem comparação")
+			VAR _texto = IF(_tem, IF(_d >= 0, "a mais que ", "a menos que ") & _periodo, "aluguel, salários e contas")
+			RETURN
+			    IF(NOT ISBLANK(_ref),
+			        "<div style='font-family:Manrope,""Segoe UI"",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:2px 4px;box-sizing:border-box;width:100%'>"
+			        & "<div style='font-size:28px;font-weight:800;letter-spacing:-0.02em;color:#111827;line-height:1.15;margin-bottom:2px'>" & _valor & "</div>"
+			        & "<div style='display:flex;flex-direction:column;align-items:center;gap:6px'>"
+			        & IF(_tem, "<span style='display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:" & _cor & ";background:" & _fundo & ";padding:3px 8px;border-radius:999px;white-space:nowrap'>" & _selo & "</span>", "")
+			        & "<span style='font-size:12px;color:#6B7280;line-height:1.4'>" & _texto & "</span>"
+			        & "</div></div>"
+			    )
+		displayFolder: 09 Cards HTML
+		lineageTag: 0328d3d0-155b-4101-9bb1-f08746fcdb34
+
+	/// HTML do card (use no visual HTML Content).
+	measure 'Card Lucro' =
+			VAR _ref = [Data de Referência]
+			VAR _valor = VAR _x = [Lucro Acum] VAR _s = IF(_x < 0, "-", "") VAR _y = ABS(_x) RETURN IF(ISBLANK(_x), "—", _s & "R$ " & IF(_y >= 1000000, FORMAT(_y / 1000000, "#,0.00") & " mi", IF(_y >= 10000, FORMAT(_y / 1000, "#,0") & " mil", IF(_y >= 1000, FORMAT(_y / 1000, "#,0.0") & " mil", FORMAT(_y, "#,0")))))
+			VAR _a = [Lucro Acum]
+			VAR _b = [Lucro Acum Ano Anterior]
+			VAR _tem = NOT ISBLANK(_a) && NOT ISBLANK(_b) && _b <> 0
+			VAR _d = IF(_tem, DIVIDE(_a - _b, ABS(_b)))
+			VAR _bom = _d >= 0
+			VAR _cor = IF(NOT _tem, "#4B5563", IF(_bom, "#1F47B3", "#A3400E"))
+			VAR _fundo = IF(NOT _tem, "#EEF0F4", IF(_bom, "#EDF1FC", "#FCEFE7"))
+			VAR _periodo = "jan–" & FORMAT(EDATE(_ref, -12), "mmm/yy")
+			VAR _selo = IF(_tem, IF(_d >= 0, "&#8599; ", "&#8600; ") & FORMAT(ABS(_d), "0.0%"), "sem comparação")
+			VAR _texto = IF(_tem, IF(_d >= 0, "a mais que ", "a menos que ") & _periodo, "sem base do ano anterior")
+			RETURN
+			    IF(NOT ISBLANK(_ref),
+			        "<div style='font-family:Manrope,""Segoe UI"",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:2px 4px;box-sizing:border-box;width:100%'>"
+			        & "<div style='font-size:28px;font-weight:800;letter-spacing:-0.02em;color:#111827;line-height:1.15;margin-bottom:2px'>" & _valor & "</div>"
+			        & "<div style='display:flex;flex-direction:column;align-items:center;gap:6px'>"
+			        & IF(_tem, "<span style='display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:" & _cor & ";background:" & _fundo & ";padding:3px 8px;border-radius:999px;white-space:nowrap'>" & _selo & "</span>", "")
+			        & "<span style='font-size:12px;color:#6B7280;line-height:1.4'>" & _texto & "</span>"
+			        & "</div></div>"
+			    )
+		displayFolder: 09 Cards HTML
+		lineageTag: 1ff86f6d-5a9d-4069-a3bd-1d8337adf6f0
+
+	/// HTML do card (use no visual HTML Content).
+	measure 'Card Estoque' =
+			VAR _ref = [Data de Referência]
+			VAR _valor = "—"
+			VAR _a = BLANK()
+			VAR _b = BLANK()
+			VAR _tem = NOT ISBLANK(_a) && NOT ISBLANK(_b) && _b <> 0
+			VAR _d = IF(_tem, DIVIDE(_a - _b, ABS(_b)))
+			VAR _bom = _d >= 0
+			VAR _cor = IF(NOT _tem, "#4B5563", IF(_bom, "#1F47B3", "#A3400E"))
+			VAR _fundo = IF(NOT _tem, "#EEF0F4", IF(_bom, "#EDF1FC", "#FCEFE7"))
+			VAR _periodo = "jan–" & FORMAT(EDATE(_ref, -12), "mmm/yy")
+			VAR _selo = IF(_tem, IF(_d >= 0, "&#8599; ", "&#8600; ") & FORMAT(ABS(_d), "0.0%"), "sem comparação")
+			VAR _texto = IF(_tem, IF(_d >= 0, "a mais que ", "a menos que ") & _periodo, "aguardando a base de estoque")
+			RETURN
+			    IF(NOT ISBLANK(_ref),
+			        "<div style='font-family:Manrope,""Segoe UI"",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:2px 4px;box-sizing:border-box;width:100%'>"
+			        & "<div style='font-size:28px;font-weight:800;letter-spacing:-0.02em;color:#111827;line-height:1.15;margin-bottom:2px'>" & _valor & "</div>"
+			        & "<div style='display:flex;flex-direction:column;align-items:center;gap:6px'>"
+			        & IF(_tem, "<span style='display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:" & _cor & ";background:" & _fundo & ";padding:3px 8px;border-radius:999px;white-space:nowrap'>" & _selo & "</span>", "")
+			        & "<span style='font-size:12px;color:#6B7280;line-height:1.4'>" & _texto & "</span>"
+			        & "</div></div>"
+			    )
+		displayFolder: 09 Cards HTML
+		lineageTag: 73c81da4-6bb9-4489-9582-d411e01104c3
+
 	column _
 		isHidden
 		lineageTag: abd16786-a1ad-4b4b-b40d-cd65da3dd140

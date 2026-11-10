@@ -27,12 +27,14 @@ table d_Calendario
 	column 'Mês Abrev' = FORMAT(d_Calendario[Date], "MMM")
 		lineageTag: 6879ee44-2521-4bad-a220-f414346a322e
 		summarizeBy: none
+		sortByColumn: 'Mês Número'
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Mês Nome' = FORMAT(d_Calendario[Date], "MMMM")
 		lineageTag: 71e225dc-114c-451a-afe8-f58bdbbdbe37
 		summarizeBy: none
+		sortByColumn: 'Mês Número'
 
 		annotation SummarizationSetBy = Automatic
 
@@ -46,6 +48,20 @@ table d_Calendario
 	column Trimestre = "Q" & QUARTER(d_Calendario[Date])
 		lineageTag: 45393a79-f6ed-43ea-b640-1ef8b2913691
 		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ano Mês' = YEAR(d_Calendario[Date]) * 100 + MONTH(d_Calendario[Date])
+		formatString: 0
+		lineageTag: 70db2eb6-2235-49ea-9207-b96fb42f0168
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês Ano' = FORMAT(d_Calendario[Date], "mmm/yy")
+		lineageTag: e632c99e-af88-4851-957e-496b762d545e
+		summarizeBy: none
+		sortByColumn: 'Ano Mês'
 
 		annotation SummarizationSetBy = Automatic
 
