@@ -1,0 +1,250 @@
+table _Medidas
+	lineageTag: f4ec8296-a452-4408-a59e-f797607e3fa2
+
+	/// Valor bruto vendido (ERP), antes de descontos.
+	measure 'Receita Bruta' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Receita bruta de vendas")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 01 Receita
+		lineageTag: 6b69c1ec-29e9-4e2f-94e8-4c529ebf88ac
+
+	/// Negativo = desconto líquido concedido.
+	measure 'Descontos e Acréscimos' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Descontos e acréscimos")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 01 Receita
+		lineageTag: 50738721-d7db-4420-967d-c2dd65bcd96e
+
+	/// Itens que não são mercadoria (ex.: renegociação de crediário).
+	measure 'Outras Receitas' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Outras receitas")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 01 Receita
+		lineageTag: 057179f4-65be-4fe0-83ab-c739066536ca
+
+	/// Receita bruta + descontos/acréscimos + outras receitas.
+	measure 'Receita Líquida' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[natureza] = "Receita")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 01 Receita
+		lineageTag: dc195c21-f933-4fd0-afdc-f56bbb3c13f9
+
+	/// Peças vendidas.
+	measure 'Qtd Vendida' = SUM('financeiro vw_fato_principal'[qtd])
+		formatString: #,##0
+		displayFolder: 01 Receita
+		lineageTag: 7199fbce-bc13-47d9-bb1d-a66e25242cd1
+
+	measure 'Preço Médio por Peça' = DIVIDE([Receita Bruta], [Qtd Vendida])
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 01 Receita
+		lineageTag: 3be40de3-456b-4ef3-bc12-475fe6dc3512
+
+	/// Desconto líquido sobre a receita bruta.
+	measure 'Desconto %' = DIVIDE(-[Descontos e Acréscimos], [Receita Bruta])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 01 Receita
+		lineageTag: 51a29bed-6af4-4d0e-9ae6-b44c65ce9d11
+
+	/// Custo da mercadoria vendida (ERP), negativo.
+	measure CMV = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[natureza] = "Custo")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 02 Custo e Margem
+		lineageTag: 38b9f515-19b9-4e34-b9d1-66b6fa069e6e
+
+	measure 'Lucro Bruto' = [Receita Líquida] + [CMV]
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 02 Custo e Margem
+		lineageTag: 27140b3a-57aa-467c-a0ae-e6995ff7f5e6
+
+	measure 'Margem Bruta %' = DIVIDE([Lucro Bruto], [Receita Líquida])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 02 Custo e Margem
+		lineageTag: a91fa2eb-84c3-462a-a195-da365f93d4c6
+
+	/// Preço / custo.
+	measure Markup = DIVIDE([Receita Líquida], -[CMV])
+		formatString: 0.00"x"
+		displayFolder: 02 Custo e Margem
+		lineageTag: c05c712e-3cf1-4293-ac00-7772744eebf7
+
+	/// Saídas do caixa que entram na DRE (negativo).
+	measure 'Despesas Operacionais' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[natureza] = "Despesa")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: 9226d961-1175-4e39-a124-ff1e4330b2de
+
+	measure 'Despesas com Pessoal' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Despesas com pessoal")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: 4d87812b-fc88-44c1-b0db-a03638af5c46
+
+	measure Pró-labore = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Pró-labore")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: 98182335-c7c8-4602-a1db-3b0f50a051ff
+
+	measure Impostos = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Impostos")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: 24638351-39a8-40b2-8950-7d0160dc5f30
+
+	measure 'Despesas de Ocupação' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Despesas de ocupação")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: 277e3eae-5d1c-4aa2-949b-c388a67353e7
+
+	measure 'Despesas Logísticas' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Despesas logísticas")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: c3f10ed5-57a4-43b2-ad33-e6fe998b9470
+
+	measure 'Despesas Administrativas' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Despesas administrativas")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: de3fb103-4e3c-42f3-9c0a-ea3ee3d1e668
+
+	measure 'Despesas Financeiras' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Despesas financeiras")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: 768b0f07-bc7d-48cb-8b3b-5806f037055a
+
+	measure 'Despesas a Classificar' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "A classificar")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 03 Despesas
+		lineageTag: b92e502e-785c-4934-90a9-60c55b250b6f
+
+	measure 'Despesas % Receita' = DIVIDE(-[Despesas Operacionais], [Receita Líquida])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 03 Despesas
+		lineageTag: 0f79bc5a-d901-4766-b0fb-d962783d90ea
+
+	/// Lucro bruto - despesas operacionais. Só fecha com todas as lojas carregadas.
+	measure Resultado = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[entra_no_dre] = TRUE())
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 04 Resultado
+		lineageTag: 15640c9a-a9ab-4b94-8532-54b5d9efc6b7
+
+	measure 'Margem Líquida %' = DIVIDE([Resultado], [Receita Líquida])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 04 Resultado
+		lineageTag: 1d8fa2cc-10bc-4caf-b9ee-c2eb54c6f78e
+
+	measure Recebimentos = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[natureza] = "Recebimento", 'financeiro vw_fato_principal'[entra_no_fluxo] = TRUE())
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: ac37680e-b7c4-47e8-a3c4-8c3c8ef32e26
+
+	/// Todas as saídas do caixa (negativo), dentro e fora da DRE.
+	measure 'Saídas de Caixa' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[origem] = "Caixa diário", 'financeiro vw_fato_principal'[natureza] <> "Recebimento", 'financeiro vw_fato_principal'[entra_no_fluxo] = TRUE())
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: ebaa92aa-b1c6-4fdf-b1b6-33c65a9e018d
+
+	measure 'Fluxo de Caixa Líquido' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[entra_no_fluxo] = TRUE())
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: 6128b276-b4d6-46a4-bf22-38a53646e84d
+
+	/// Soma do fluxo desde o início dos dados (variação de caixa, não saldo bancário).
+	measure 'Fluxo de Caixa Acumulado' = VAR _ate = MAX(d_Calendario[Date]) RETURN CALCULATE([Fluxo de Caixa Líquido], FILTER(ALL(d_Calendario), d_Calendario[Date] <= _ate))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: 3b40efeb-2a87-4369-a068-682206d9e344
+
+	/// Saída do caixa fora da DRE.
+	measure 'Compras de Mercadoria (Caixa)' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Compras de mercadoria")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: 96752e29-0003-4e07-b3b4-b29d78c13330
+
+	/// Saída do caixa fora da DRE.
+	measure 'Amortização de Empréstimos' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Financeiro - amortização")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: 7b13b247-728f-4e9d-8637-545c984a5972
+
+	/// Saída do caixa fora da DRE.
+	measure Investimentos = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Investimentos")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: 58444be3-b388-4faa-b31d-ff04852cd48f
+
+	/// Saída do caixa fora da DRE.
+	measure 'Retiradas dos Sócios' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Não operacional - sócios")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: 51a23173-0253-4ebe-a497-87afaa4d6143
+
+	/// Saída do caixa fora da DRE.
+	measure 'Transferências entre Lojas' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Transferências")
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 05 Caixa
+		lineageTag: ce5ff37b-2cc9-4a62-8ea3-1414101f7eb3
+
+	measure 'Receita Líquida Mês Anterior' = CALCULATE([Receita Líquida], DATEADD(d_Calendario[Date], -1, MONTH))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 06 Comparativos
+		lineageTag: 5a142ed2-8d9e-4833-96a9-b69fce1a609a
+
+	measure 'Receita Líquida Var % Mês' = DIVIDE([Receita Líquida] - [Receita Líquida Mês Anterior], ABS([Receita Líquida Mês Anterior]))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 06 Comparativos
+		lineageTag: 78d8e0be-2ad3-4dc3-a1a4-78d732049336
+
+	measure 'Receita Líquida Ano Anterior' = CALCULATE([Receita Líquida], SAMEPERIODLASTYEAR(d_Calendario[Date]))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 06 Comparativos
+		lineageTag: 79c6a35a-ef97-4464-89b0-62b744b85253
+
+	measure 'Receita Líquida Var % Ano' = DIVIDE([Receita Líquida] - [Receita Líquida Ano Anterior], ABS([Receita Líquida Ano Anterior]))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 06 Comparativos
+		lineageTag: 21fd03fe-8363-4abd-a499-1e88d2621482
+
+	measure 'Receita Líquida Acumulado no Ano' = TOTALYTD([Receita Líquida], d_Calendario[Date])
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 06 Comparativos
+		lineageTag: 32ed54ad-5ce3-422c-a38d-ad428a2f8b50
+
+	measure 'Resultado Mês Anterior' = CALCULATE([Resultado], DATEADD(d_Calendario[Date], -1, MONTH))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 06 Comparativos
+		lineageTag: 60fa3672-597b-430f-8aec-f5b4a6333f47
+
+	measure 'Resultado Var % Mês' = DIVIDE([Resultado] - [Resultado Mês Anterior], ABS([Resultado Mês Anterior]))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 06 Comparativos
+		lineageTag: 544fc340-8d97-4d9c-b662-3f2b8215067e
+
+	measure 'Resultado Ano Anterior' = CALCULATE([Resultado], SAMEPERIODLASTYEAR(d_Calendario[Date]))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 06 Comparativos
+		lineageTag: 06368fcd-3d85-487a-99cf-4ab6c46a7ae4
+
+	measure 'Resultado Var % Ano' = DIVIDE([Resultado] - [Resultado Ano Anterior], ABS([Resultado Ano Anterior]))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 06 Comparativos
+		lineageTag: 22244e86-ea8c-4cec-939b-f55af3da9d7e
+
+	measure 'Resultado Acumulado no Ano' = TOTALYTD([Resultado], d_Calendario[Date])
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 06 Comparativos
+		lineageTag: cf2c88d0-840c-4091-90b9-e375c14e6c2c
+
+	measure 'Margem Bruta % Ano Anterior' = CALCULATE([Margem Bruta %], SAMEPERIODLASTYEAR(d_Calendario[Date]))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 06 Comparativos
+		lineageTag: 19a36fd9-7e6b-45bf-a95e-f3de9fe9a581
+
+	column _
+		isHidden
+		lineageTag: abd16786-a1ad-4b4b-b40d-cd65da3dd140
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [_]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Medidas = calculated
+		mode: import
+		source = ROW("_", BLANK())
+
+	annotation PBI_Id = a75da38fd84e4a52aa625558cff76240
+
