@@ -1,0 +1,150 @@
+table 'financeiro vw_fato_principal'
+	lineageTag: 20f9d69b-066a-412a-b1ed-6c646f0aa8e2
+
+	column data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ef16f336-3b3e-490d-b65d-ba7014f4fd7a
+		summarizeBy: none
+		sourceColumn: data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column origem
+		dataType: string
+		lineageTag: 9268120d-aa64-4deb-b756-153f30e97963
+		summarizeBy: none
+		sourceColumn: origem
+
+		annotation SummarizationSetBy = Automatic
+
+	column natureza
+		dataType: string
+		lineageTag: 742579ce-5afe-4dda-b0b9-0f23feea56a2
+		summarizeBy: none
+		sourceColumn: natureza
+
+		annotation SummarizationSetBy = Automatic
+
+	column grupo_dre
+		dataType: string
+		lineageTag: 4e3dbf73-272c-4c41-8026-a8a2ca2db7d2
+		summarizeBy: none
+		sourceColumn: grupo_dre
+
+		annotation SummarizationSetBy = Automatic
+
+	column conta
+		dataType: string
+		lineageTag: e6734505-0a21-44b2-b075-e080c8913766
+		summarizeBy: none
+		sourceColumn: conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column loja
+		dataType: string
+		lineageTag: 749f90a3-7aeb-46a4-a792-86a15a263c42
+		summarizeBy: none
+		sourceColumn: loja
+
+		annotation SummarizationSetBy = Automatic
+
+	column cnpj
+		dataType: string
+		lineageTag: 45fac1b9-36de-4ac8-95e9-6d94c2dd0d95
+		summarizeBy: none
+		sourceColumn: cnpj
+
+		annotation SummarizationSetBy = Automatic
+
+	column grupo_produto
+		dataType: string
+		lineageTag: 0c6b111b-baf1-4363-9e7b-a17641dd17cd
+		summarizeBy: none
+		sourceColumn: grupo_produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column categoria_produto
+		dataType: string
+		lineageTag: 636dc1ed-87a1-4b73-b348-ad72617567c8
+		summarizeBy: none
+		sourceColumn: categoria_produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column cod_produto
+		dataType: string
+		lineageTag: 8722c6a6-322c-41c4-8fdb-384a69b48259
+		summarizeBy: none
+		sourceColumn: cod_produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column descricao
+		dataType: string
+		lineageTag: 850db9c0-dcdb-4320-9100-1114826183b8
+		summarizeBy: none
+		sourceColumn: descricao
+
+		annotation SummarizationSetBy = Automatic
+
+	column qtd
+		dataType: int64
+		formatString: 0
+		lineageTag: 798322e3-98ec-43a1-84f1-e11006c295e8
+		summarizeBy: sum
+		sourceColumn: qtd
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor
+		dataType: double
+		lineageTag: c236e0a4-2c52-4ac0-9f00-bfca2fb7777d
+		summarizeBy: sum
+		sourceColumn: valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column entra_no_dre
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7197f199-36df-402b-ad08-e94d32a467e5
+		summarizeBy: none
+		sourceColumn: entra_no_dre
+
+		annotation SummarizationSetBy = Automatic
+
+	column entra_no_fluxo
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9406acc8-83be-4c76-9872-c6274e7b6830
+		summarizeBy: none
+		sourceColumn: entra_no_fluxo
+
+		annotation SummarizationSetBy = Automatic
+
+	column rastreio
+		dataType: string
+		lineageTag: 0719e7ad-a64e-473b-8e22-a4b44ca20aa3
+		summarizeBy: none
+		sourceColumn: rastreio
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'financeiro vw_fato_principal' = m
+		mode: import
+		source =
+				let
+				  Origem = PostgreSQL.Database("localhost", "ze_maria"),
+				  #"Navegação 1" = Origem{[Schema = "financeiro", Item = "vw_fato_principal"]}[Data]
+				in
+				  #"Navegação 1"
+
+	annotation PBI_ResultType = Table
+

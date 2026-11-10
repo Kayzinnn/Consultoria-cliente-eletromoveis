@@ -1,0 +1,74 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 736.38305001469382,
+            "y": 194
+          },
+          "nodeIndex": "d_Calendario",
+          "nodeLineageTag": "cc2db4b7-7ebe-4ee4-b841-859767937e1f",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 729.38305001469382,
+            "y": 0
+          },
+          "nodeIndex": "financeiro dim_grupo_dre",
+          "nodeLineageTag": "1e5ef784-4e8e-4bbe-ae71-636068c40440",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 334.20156119318534,
+            "y": -50
+          },
+          "nodeIndex": "financeiro vw_fato_principal",
+          "nodeLineageTag": "20f9d69b-066a-412a-b1ed-6c646f0aa8e2",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 0
+          },
+          "nodeIndex": "vendas dim_produto",
+          "nodeLineageTag": "379e7cf1-954e-473e-91d6-2bdc8ab5d3eb",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 3
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

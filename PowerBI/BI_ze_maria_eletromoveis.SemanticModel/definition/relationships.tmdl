@@ -1,0 +1,32 @@
+relationship 5904d563-3932-4d0a-8d12-1bf9df384042
+	joinOnDateBehavior: datePartOnly
+	fromColumn: d_Calendario.Date
+	toColumn: LocalDateTable_68618b26-5969-4bb8-9600-5574d1684642.Date
+
+relationship c2c2e1dd-8b85-4306-9e8e-3fb1e111e9e7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'vendas dim_produto'.primeira_venda
+	toColumn: LocalDateTable_f65eeef1-05ba-4e75-afbf-5935ef0d7525.Date
+
+relationship aaf268cb-2ccc-4f0d-a70d-74985ee719b9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'vendas dim_produto'.ultima_venda
+	toColumn: LocalDateTable_0d03e075-4544-4779-93f1-750c0497eb2b.Date
+
+relationship f80f2c76-c9a0-4e4f-a8a2-2ca7386b7733
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'vendas dim_produto'.atualizado_em
+	toColumn: LocalDateTable_2d02cd4c-d88d-4147-b4ba-36941b9ab59e.Date
+
+relationship AutoDetected_fc581ce4-9abf-4bfa-b724-8c24cb881e1e
+	fromColumn: 'financeiro vw_fato_principal'.grupo_dre
+	toColumn: 'financeiro dim_grupo_dre'.grupo_dre
+
+relationship AutoDetected_18c46243-7270-4cb7-8ce1-2ba3986708b7
+	fromColumn: 'financeiro vw_fato_principal'.cod_produto
+	toColumn: 'vendas dim_produto'.cod_produto
+
+relationship 0cd1b651-0ccb-2833-c409-13accc2e469d
+	fromColumn: 'financeiro vw_fato_principal'.data
+	toColumn: d_Calendario.Date
+

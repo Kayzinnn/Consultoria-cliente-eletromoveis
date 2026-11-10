@@ -1,0 +1,39 @@
+table 'financeiro dim_grupo_dre'
+	lineageTag: 1e5ef784-4e8e-4bbe-ae71-636068c40440
+
+	column grupo_dre
+		dataType: string
+		lineageTag: 4126b9e0-71ee-48ba-a3d9-95eeeb706b80
+		summarizeBy: none
+		sourceColumn: grupo_dre
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordem
+		dataType: int64
+		formatString: 0
+		lineageTag: b7ae5195-b3ab-40c9-ab84-aacfe3730339
+		summarizeBy: none
+		sourceColumn: ordem
+
+		annotation SummarizationSetBy = Automatic
+
+	column secao
+		dataType: string
+		lineageTag: c7ac523b-eb4b-4788-adcf-5783eb28c344
+		summarizeBy: none
+		sourceColumn: secao
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'financeiro dim_grupo_dre' = m
+		mode: import
+		source =
+				let
+				  Origem = PostgreSQL.Database("localhost", "ze_maria"),
+				  #"Navegação 1" = Origem{[Schema = "financeiro", Item = "dim_grupo_dre"]}[Data]
+				in
+				  #"Navegação 1"
+
+	annotation PBI_ResultType = Table
+

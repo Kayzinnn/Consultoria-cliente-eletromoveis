@@ -1,0 +1,92 @@
+table 'vendas dim_produto'
+	lineageTag: 379e7cf1-954e-473e-91d6-2bdc8ab5d3eb
+
+	column cod_produto
+		dataType: string
+		lineageTag: cdf44a10-0638-4571-9266-e3c44940ac93
+		summarizeBy: none
+		sourceColumn: cod_produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column descricao
+		dataType: string
+		lineageTag: d0af3dae-195a-415f-b55b-25eda25e44cf
+		summarizeBy: none
+		sourceColumn: descricao
+
+		annotation SummarizationSetBy = Automatic
+
+	column categoria_manual
+		dataType: string
+		lineageTag: 01f743da-43d1-4575-83c0-fcf83bad82a2
+		summarizeBy: none
+		sourceColumn: categoria_manual
+
+		annotation SummarizationSetBy = Automatic
+
+	column grupo_manual
+		dataType: string
+		lineageTag: a1bfe5ad-5a65-497b-8f56-85a52b7bbbe6
+		summarizeBy: none
+		sourceColumn: grupo_manual
+
+		annotation SummarizationSetBy = Automatic
+
+	column primeira_venda
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1eb30a85-b005-4c81-83fc-1f9009a6dc02
+		summarizeBy: none
+		sourceColumn: primeira_venda
+
+		variation Variação
+			isDefault
+			relationship: c2c2e1dd-8b85-4306-9e8e-3fb1e111e9e7
+			defaultHierarchy: LocalDateTable_f65eeef1-05ba-4e75-afbf-5935ef0d7525.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ultima_venda
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e4eb6cc4-3340-4710-8759-e3ae7f09c121
+		summarizeBy: none
+		sourceColumn: ultima_venda
+
+		variation Variação
+			isDefault
+			relationship: aaf268cb-2ccc-4f0d-a70d-74985ee719b9
+			defaultHierarchy: LocalDateTable_0d03e075-4544-4779-93f1-750c0497eb2b.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column atualizado_em
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 484735fe-9714-4525-b0db-ae9c5d13b677
+		summarizeBy: none
+		sourceColumn: atualizado_em
+
+		variation Variação
+			isDefault
+			relationship: f80f2c76-c9a0-4e4f-a8a2-2ca7386b7733
+			defaultHierarchy: LocalDateTable_2d02cd4c-d88d-4147-b4ba-36941b9ab59e.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'vendas dim_produto' = m
+		mode: import
+		source =
+				let
+				  Origem = PostgreSQL.Database("localhost", "ze_maria"),
+				  #"Navegação 1" = Origem{[Schema = "vendas", Item = "dim_produto"]}[Data]
+				in
+				  #"Navegação 1"
+
+	annotation PBI_ResultType = Table
+

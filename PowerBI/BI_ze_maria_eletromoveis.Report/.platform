@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "BI_ze_maria_eletromoveis"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7ac8cb18-2248-4665-bf20-1565526a429e"
+  }
+}

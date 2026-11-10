@@ -1,0 +1,59 @@
+table d_Calendario
+	lineageTag: cc2db4b7-7ebe-4ee4-b841-859767937e1f
+
+	column Date
+		formatString: Short Date
+		lineageTag: ae94ac4a-004c-4d74-98b5-ecf241fc5807
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variação
+			isDefault
+			relationship: 5904d563-3932-4d0a-8d12-1bf9df384042
+			defaultHierarchy: LocalDateTable_68618b26-5969-4bb8-9600-5574d1684642.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano = ```
+			YEAR(d_Calendario[Date]) 
+			```
+		formatString: 0
+		lineageTag: be800a56-d5ff-4278-89f3-d3bdd8bf1b97
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês Abrev' = FORMAT(d_Calendario[Date], "MMM")
+		lineageTag: 6879ee44-2521-4bad-a220-f414346a322e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês Nome' = FORMAT(d_Calendario[Date], "MMMM")
+		lineageTag: 71e225dc-114c-451a-afe8-f58bdbbdbe37
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês Número' = MONTH(D_Calendario[Date])
+		formatString: 0
+		lineageTag: 69f5b397-425e-45f2-b29f-b6631b531bdb
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Trimestre = "Q" & QUARTER(d_Calendario[Date])
+		lineageTag: 45393a79-f6ed-43ea-b640-1ef8b2913691
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_Calendario = calculated
+		mode: import
+		source =
+				
+				CALENDAR(DATE(2022, 1, 1), DATE(2028, 1, 1))
+
+	annotation PBI_Id = a6640467dfcb462e8944968cebaf83be
+

@@ -1,0 +1,27 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["financeiro dim_grupo_dre","financeiro vw_fato_principal","vendas dim_produto"]
+
+ref table d_Calendario
+ref table DateTableTemplate_6c87bc45-6361-4f43-b7e9-cd4bf287e6e8
+ref table LocalDateTable_68618b26-5969-4bb8-9600-5574d1684642
+ref table 'financeiro dim_grupo_dre'
+ref table 'financeiro vw_fato_principal'
+ref table 'vendas dim_produto'
+ref table LocalDateTable_f65eeef1-05ba-4e75-afbf-5935ef0d7525
+ref table LocalDateTable_0d03e075-4544-4779-93f1-750c0497eb2b
+ref table LocalDateTable_2d02cd4c-d88d-4147-b4ba-36941b9ab59e
+
+ref cultureInfo pt-BR
+
