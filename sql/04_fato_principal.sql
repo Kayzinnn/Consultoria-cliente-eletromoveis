@@ -52,7 +52,8 @@ INSERT INTO dim_grupo_dre VALUES
     ('Financeiro - amortização',          220, 'Fora da DRE'),
     ('Transferências',                    225, 'Fora da DRE'),
     ('Investimentos',                     230, 'Fora da DRE'),
-    ('Não operacional - sócios',          240, 'Fora da DRE')
+    ('Não operacional - sócios',          240, 'Fora da DRE'),
+    ('Meta de vendas',                    300, 'Metas')
 ON CONFLICT (grupo_dre) DO UPDATE SET ordem = EXCLUDED.ordem, secao = EXCLUDED.secao;
 
 -- Fornecedores de mercadoria: 1ª palavra dos fornecedores pagos por DUPLICATA no contas a pagar
@@ -223,7 +224,14 @@ SELECT s.data, 'Caixa diário',
 FROM vw_caixa_saida_classificada s
 -- loja 'GRAÇA|MUCAMBO' vira duas linhas com metade do valor cada
 CROSS JOIN LATERAL (SELECT string_to_array(s.loja_inferida, '|') AS lojas) a
-CROSS JOIN LATERAL (SELECT trim(x) AS loja, a.lojas FROM unnest(a.lojas) x) u;
+CROSS JOIN LATERAL (SELECT trim(x) AS loja, a.lojas FROM unnest(a.lojas) x) u
+
+UNION ALL
+-- 5) Metas de venda (config/metas_vendas.csv): meta do dia, por loja e dia de venda. Fora da DRE e do fluxo.
+SELECT m.data, 'Meta de vendas', 'Meta', 'Meta de vendas', 'Meta de venda líquida', m.loja, NULL, NULL, NULL, NULL,
+       'Meta ' || lpad(m.mes::text, 2, '0') || '/' || m.ano, NULL,
+       m.meta_dia, false, false, 'vendas.meta_venda ' || m.ano || '-' || m.mes || ' ' || m.loja, m.negocio, NULL
+FROM vendas.vw_meta_venda_dia m;
 
 COMMENT ON VIEW vw_fato_principal IS
- 'Fato única do BI. valor: receita +, custo/despesa/saída -. DRE = SUM(valor) WHERE entra_no_dre; Fluxo = SUM(valor) WHERE entra_no_fluxo.';
+ 'Fato única do BI. valor: receita +, custo/despesa/saída -. DRE = SUM(valor) WHERE entra_no_dre; Fluxo = SUM(valor) WHERE entra_no_fluxo; Meta = SUM(valor) WHERE origem = ''Meta de vendas''.';

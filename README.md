@@ -79,6 +79,11 @@ saida\      CSVs intermediários (fora do Git)
 - As saídas do caixa são classificadas por `config\regras_conta_caixa.csv` (regex, menor prioridade vence). Fornecedor de mercadoria, empréstimo, investimento, gasto pessoal e transferência ficam **fora da DRE**, porque o CMV vem do ERP.
 - A DRE só fecha quando **todas as lojas** tiverem receita carregada (ERP de cada loja + sistema das lojas Ortobom).
 
+**Metas de venda (orçamento)**
+- Edite `config\metas_vendas.csv` (ano; mês; loja; meta do mês em R$) e rode `python atualizar_metas.py`. O CSV é a fonte: cada execução substitui as metas do banco.
+- A meta diária = meta do mês ÷ dias de venda (dias do mês sem domingos e sem os dias de `config\dias_sem_venda.csv`, para feriados).
+- Ficam em `vendas.meta_venda` / `vendas.vw_meta_venda_dia` e entram na fato principal com `origem = 'Meta de vendas'` (fora da DRE e do fluxo), uma linha por loja e dia de venda.
+
 **Lojas Ortobom (outro sistema)**
 - Vendas: em `entrada\vendas\ORTOBOM\`, para cada filial, salve o **"Relatório de venda de produtos (por data)"** e o **"Relatório de produtos com margem de lucro"** do mesmo período. Os dois formam par pela filial e pelo Início/Fim do cabeçalho (o nome do arquivo não importa). A loja vira `ORTOBOM GRAÇA`, `ORTOBOM MUCAMBO`, `ORTOBOM CARNAUBAL`. Rode `python processa_vendas.py --loja ORTOBOM`; cada par substitui o próprio período daquela filial.
 - O custo de cada venda = quantidade × custo unitário do produto no relatório de margem. Produto sem custo lá entra com custo 0 (`custo_informado = false`) ou pelo `config\custo_estimado.csv`.

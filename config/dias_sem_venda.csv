@@ -1,0 +1,3 @@
+# Dias em que as lojas não abrem, além dos domingos (feriados, inventário...). Não entram na meta diária.
+# loja vazia = vale para todas as lojas.
+data;loja;descricao
