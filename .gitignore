@@ -1,0 +1,16 @@
+# Senhas e configuração local
+.env
+
+# Dados do cliente (nunca versionar)
+entrada/
+saida/
+*.pdf
+*.xlsx
+*.xls
+*.csv
+!config/*.csv
+
+# Python
+__pycache__/
+.venv/
+venv/

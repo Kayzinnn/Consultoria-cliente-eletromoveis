@@ -1,0 +1,156 @@
+prefixo;categoria;grupo
+GRP;Guarda-roupa;Móveis
+COZ;Cozinha;Móveis
+KIT COZ;Cozinha;Móveis
+KITAO;Cozinha;Móveis
+KIT-105;Cozinha;Móveis
+KIT-120;Cozinha;Móveis
+BALCAO;Cozinha;Móveis
+BALCÃO;Cozinha;Móveis
+AEREO;Cozinha;Móveis
+ARMARIO;Armário e multiuso;Móveis
+MULTIUSO;Armário e multiuso;Móveis
+ESTANTE;Armário e multiuso;Móveis
+PASSADEIRA;Armário e multiuso;Móveis
+COMODA;Quarto;Móveis
+CAMA;Quarto;Móveis
+CABECEIRA;Quarto;Móveis
+CABEC;Quarto;Móveis
+CRIADO;Quarto;Móveis
+MESA;Mesas e cadeiras;Móveis
+MESAS;Mesas e cadeiras;Móveis
+CAD;Mesas e cadeiras;Móveis
+CADEIRA;Mesas e cadeiras;Móveis
+BANCO;Mesas e cadeiras;Móveis
+BANQUETA;Mesas e cadeiras;Móveis
+SOFA;Sofá e poltrona;Móveis
+POLTRONA;Sofá e poltrona;Móveis
+RACK;Sala (rack, painel, home);Móveis
+PAINEL;Sala (rack, painel, home);Móveis
+HOME;Sala (rack, painel, home);Móveis
+BANCADA;Sala (rack, painel, home);Móveis
+CRISTALEIRA;Sala de jantar;Móveis
+BUFFET;Sala de jantar;Móveis
+APARADOR;Sala de jantar;Móveis
+ESCRIVANINHA;Escritório;Móveis
+BIRO;Escritório;Móveis
+COL;Colchão;Colchões e cama
+BASE;Base box;Colchões e cama
+TRAVESSEIRO;Cama, mesa e banho;Colchões e cama
+PROTETOR;Cama, mesa e banho;Colchões e cama
+JG COLCHA;Cama, mesa e banho;Colchões e cama
+LENCOL;Cama, mesa e banho;Colchões e cama
+FRONHA;Cama, mesa e banho;Colchões e cama
+SUAVE;Cama, mesa e banho;Colchões e cama
+FOGAO;Fogão;Linha branca
+REFRIGERADOR;Refrigeração;Linha branca
+FREEZER;Refrigeração;Linha branca
+GELAGUA;Refrigeração;Linha branca
+LAVADORA;Lavanderia;Linha branca
+TANQUINHO;Lavanderia;Linha branca
+MICROONDAS;Micro-ondas e forno;Linha branca
+FORNO;Micro-ondas e forno;Linha branca
+VENTILADOR;Ventilação;Eletroportáteis
+LIQ;Cozinha elétrica;Eletroportáteis
+FRITADEIRA;Cozinha elétrica;Eletroportáteis
+SANDUICHEIRA;Cozinha elétrica;Eletroportáteis
+ESPREMEDOR;Cozinha elétrica;Eletroportáteis
+BATEDEIRA;Cozinha elétrica;Eletroportáteis
+MULTIPROCESSADOR;Cozinha elétrica;Eletroportáteis
+CAFETEIRA;Cozinha elétrica;Eletroportáteis
+CHALEIRA;Cozinha elétrica;Eletroportáteis
+CHURRASQUEIRA;Cozinha elétrica;Eletroportáteis
+FERRO;Cuidados com a casa;Eletroportáteis
+ASPIRADOR;Cuidados com a casa;Eletroportáteis
+SECADOR;Cuidados pessoais;Eletroportáteis
+PRANCHA;Cuidados pessoais;Eletroportáteis
+ESCOVA;Cuidados pessoais;Eletroportáteis
+CORTADOR;Cuidados pessoais;Eletroportáteis
+TV;TV e vídeo;Eletrônicos e acessórios
+RECEPTOR;TV e vídeo;Eletrônicos e acessórios
+ANTENA;TV e vídeo;Eletrônicos e acessórios
+LNBF;TV e vídeo;Eletrônicos e acessórios
+FIO;TV e vídeo;Eletrônicos e acessórios
+CONECTOR;TV e vídeo;Eletrônicos e acessórios
+CONTROLE;TV e vídeo;Eletrônicos e acessórios
+SUPORTE;TV e vídeo;Eletrônicos e acessórios
+CAIXA DE SOM;Som;Eletrônicos e acessórios
+RADIO;Som;Eletrônicos e acessórios
+MINI;Som;Eletrônicos e acessórios
+MEGAPHONE;Som;Eletrônicos e acessórios
+FONE;Som;Eletrônicos e acessórios
+CELULAR;Telefonia e informática;Eletrônicos e acessórios
+TABLET;Telefonia e informática;Eletrônicos e acessórios
+TELEFONE;Telefonia e informática;Eletrônicos e acessórios
+CHIP;Telefonia e informática;Eletrônicos e acessórios
+CABO;Telefonia e informática;Eletrônicos e acessórios
+CARREGADOR;Telefonia e informática;Eletrônicos e acessórios
+FONTE;Telefonia e informática;Eletrônicos e acessórios
+PEN;Telefonia e informática;Eletrônicos e acessórios
+ADAPTADOR;Telefonia e informática;Eletrônicos e acessórios
+EXTENSAO;Telefonia e informática;Eletrônicos e acessórios
+CALCULADORA;Telefonia e informática;Eletrônicos e acessórios
+PANELA;Panelas;Utilidades domésticas
+FRIGIDEIRA;Panelas;Utilidades domésticas
+CONJ. PANELA;Panelas;Utilidades domésticas
+JOGO;Panelas;Utilidades domésticas
+CUSCUZEIRA;Panelas;Utilidades domésticas
+CAIXA;Utilidades em geral;Utilidades domésticas
+GARRAFA;Utilidades em geral;Utilidades domésticas
+FRUTEIRA;Utilidades em geral;Utilidades domésticas
+GAVETEIRO;Utilidades em geral;Utilidades domésticas
+TABUA;Lavanderia e limpeza;Utilidades domésticas
+VARAL;Lavanderia e limpeza;Utilidades domésticas
+ESCORREDOR;Utilidades em geral;Utilidades domésticas
+SPIN;Lavanderia e limpeza;Utilidades domésticas
+MOP;Lavanderia e limpeza;Utilidades domésticas
+CESTO;Lavanderia e limpeza;Utilidades domésticas
+CABIDE;Lavanderia e limpeza;Utilidades domésticas
+FILTRO;Utilidades em geral;Utilidades domésticas
+ESCADA;Utilidades em geral;Utilidades domésticas
+CARRINHO;Utilidades em geral;Utilidades domésticas
+VARAO;Utilidades em geral;Utilidades domésticas
+BALANÇA;Utilidades em geral;Utilidades domésticas
+GUARDA;Utilidades em geral;Utilidades domésticas
+MASCARA;Utilidades em geral;Utilidades domésticas
+RESMA;Utilidades em geral;Utilidades domésticas
+BOCAL;Utilidades em geral;Utilidades domésticas
+BICICLETA;Bicicletas e infantil;Infantil e lazer
+TRICICLO;Bicicletas e infantil;Infantil e lazer
+ANDAJÁ;Bicicletas e infantil;Infantil e lazer
+FURADEIRA;Ferramentas;Ferramentas
+PARAFUSADEIRA;Ferramentas;Ferramentas
+SERRA;Ferramentas;Ferramentas
+RENEGOCIAÇÃO;Renegociação de crediário;Não é venda de mercadoria
+AR CONDICIONADO;Climatização;Linha branca
+ART PANTA;Armário e multiuso;Móveis
+PRATELEIRA;Armário e multiuso;Móveis
+PANELEIRO;Cozinha;Móveis
+BERÇO;Quarto;Móveis
+PENTEADEIRA;Quarto;Móveis
+SAPATEIRA;Quarto;Móveis
+MESINHA;Mesas e cadeiras;Móveis
+CONJ. DE AREA;Mesas e cadeiras;Móveis
+LIVREIRO;Escritório;Móveis
+LONGARINA;Escritório;Móveis
+QUADRO BRANCO;Escritório;Móveis
+PROTEÇÃO DE CAMA;Cama, mesa e banho;Colchões e cama
+CAPA SOFA;Cama, mesa e banho;Colchões e cama
+KIT PANELA;Panelas;Utilidades domésticas
+LEITEIRA;Panelas;Utilidades domésticas
+CANECO;Panelas;Utilidades domésticas
+FAQUEIRO;Panelas;Utilidades domésticas
+CONJ. 6 COPOS;Panelas;Utilidades domésticas
+CORTINA;Decoração;Utilidades domésticas
+ESPELHO;Decoração;Utilidades domésticas
+VASO;Decoração;Utilidades domésticas
+BALDE;Lavanderia e limpeza;Utilidades domésticas
+ALÇA DE GARRAFA;Utilidades em geral;Utilidades domésticas
+BALANCA;Utilidades em geral;Utilidades domésticas
+CAPA DE CHUVA;Utilidades em geral;Utilidades domésticas
+CHAVEIRO;Utilidades em geral;Utilidades domésticas
+LANTERNA;Utilidades em geral;Utilidades domésticas
+LUMINARIA;Utilidades em geral;Utilidades domésticas
+MALA;Utilidades em geral;Utilidades domésticas
+RAQUETE;Utilidades em geral;Utilidades domésticas
+MOUSE;Telefonia e informática;Eletrônicos e acessórios

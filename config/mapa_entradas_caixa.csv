@@ -1,0 +1,12 @@
+rotulo;loja;meio;conta
+ENT GRA;GRAÇA;Dinheiro/loja;Caixa loja Graça
+BRAD GRA;GRAÇA;Banco;Bradesco Graça
+STONE GRA;GRAÇA;Cartão;Stone Graça
+ITAU GRAÇA;GRAÇA;Banco;Itaú Graça
+ENT.MUC;MUCAMBO;Dinheiro/loja;Caixa loja Mucambo
+BRAD MUC;MUCAMBO;Banco;Bradesco Mucambo
+STONE MUC;MUCAMBO;Cartão;Stone Mucambo
+ITAU MUC;MUCAMBO;Banco;Itaú Mucambo
+CAIXA;;Banco;Caixa Econômica
+CX ECONOMICO;;Banco;Caixa Econômica
+CAIXA V M;;Banco;Caixa Econômica V M
