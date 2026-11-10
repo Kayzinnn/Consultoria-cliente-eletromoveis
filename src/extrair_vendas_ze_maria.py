@@ -235,6 +235,7 @@ def main():
     ap.add_argument("--produto", required=True, type=Path)
     ap.add_argument("--venda", required=True, type=Path)
     ap.add_argument("--saida", default=Path("saida"), type=Path)
+    ap.add_argument("--loja", default="", help="nome da loja (ex.: GRAÇA, MUCAMBO)")
     a = ap.parse_args()
     a.saida.mkdir(parents=True, exist_ok=True)
 
@@ -248,9 +249,9 @@ def main():
     probs = err_p + err_v + validar("produto", itens, st_p, tot_p, True) + validar("venda", vendas, st_v, tot_v)
 
     for it in itens:
-        it["cnpj"] = cnpj; it["arquivo_origem"] = a.produto.name
+        it["cnpj"] = cnpj; it["loja"] = a.loja.upper(); it["arquivo_origem"] = a.produto.name
     for v in vendas:
-        v["cnpj"] = cnpj; v["arquivo_origem"] = a.venda.name
+        v["cnpj"] = cnpj; v["loja"] = a.loja.upper(); v["arquivo_origem"] = a.venda.name
 
     # dim_produto: última descrição vista por código
     prods = {}
@@ -260,10 +261,10 @@ def main():
     dimp = [dict(cod_produto=k, descricao=v["descricao"], qtd_descricoes=len(v["descricoes"])) for k, v in sorted(prods.items())]
 
     write_csv(a.saida / "fato_venda_item.csv", itens,
-              ["cnpj", "data_venda", "seq_dia", "cod_produto", "descricao", "qtd", "vr_bruto", "vr_desc_acres",
+              ["cnpj", "loja", "data_venda", "seq_dia", "cod_produto", "descricao", "qtd", "vr_bruto", "vr_desc_acres",
                "vr_liquido", "vr_custo", "vr_lucro", "arquivo_origem", "pagina"])
     write_csv(a.saida / "fato_venda.csv", vendas,
-              ["cnpj", "controle", "data_venda", "data_hora", "tipo", "vr_bruto", "vr_desc_acres", "vr_liquido",
+              ["cnpj", "loja", "controle", "data_venda", "data_hora", "tipo", "vr_bruto", "vr_desc_acres", "vr_liquido",
                "vr_custo", "vr_lucro", "vr_coluna_extra", "arquivo_origem", "pagina"])
     write_csv(a.saida / "dim_produto.csv", dimp, ["cod_produto", "descricao", "qtd_descricoes"])
     write_csv(a.saida / "dim_empresa.csv", [dict(cnpj=cnpj, razao_social=info_p.get("razao"), uf=info_p.get("uf"),
@@ -271,7 +272,7 @@ def main():
               ["cnpj", "razao_social", "uf", "inscricao_estadual"])
 
     def iso(d): return datetime.strptime(d, "%d/%m/%Y").date().isoformat()
-    meta = dict(cnpj=cnpj, razao_social=info_p.get("razao"),
+    meta = dict(cnpj=cnpj, loja=a.loja.upper(), razao_social=info_p.get("razao"),
                 arquivo_produto=a.produto.name, periodo_produto=[iso(info_p["periodo_ini"]), iso(info_p["periodo_fim"])],
                 arquivo_venda=a.venda.name, periodo_venda=[iso(info_v["periodo_ini"]), iso(info_v["periodo_fim"])],
                 linhas_item=len(itens), linhas_venda=len(vendas),
@@ -280,7 +281,7 @@ def main():
                 validacao_ok=not probs, problemas=probs)
     (a.saida / "carga_meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print(f"Empresa: {info_p.get('razao')} ({cnpj})")
+    print(f"Empresa: {info_p.get('razao')} ({cnpj}) — loja: {a.loja.upper() or '(não informada)'}")
     print(f"Itens: {len(itens)} linhas | {len(dimp)} produtos | {min(i['data_venda'] for i in itens)} a {max(i['data_venda'] for i in itens)}")
     print(f"Vendas: {len(vendas)} controles ({sum(v['tipo'] != 'VENDA' for v in vendas)} trocas/devoluções)")
     print(f"Líquido itens: {sum(i['vr_liquido'] for i in itens)} | Líquido vendas: {sum(v['vr_liquido'] for v in vendas)}")

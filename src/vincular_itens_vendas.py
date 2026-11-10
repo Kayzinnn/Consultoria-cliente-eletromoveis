@@ -113,7 +113,7 @@ def main():
         byid = {l["id"]: l for l in ls}
         if not sols:
             for l in ls:
-                out.append(dict(cnpj=l["row"]["cnpj"], data_venda=dia, seq_dia=l["id"], controle="", qtd=l["qtd"],
+                out.append(dict(cnpj=l["row"]["cnpj"], loja=l["row"].get("loja", ""), data_venda=dia, seq_dia=l["id"], controle="", qtd=l["qtd"],
                                 vr_liquido=f'{l["liq"]/100:.2f}', vr_custo=f'{l["custo"]/100:.2f}', status_vinculo=status))
                 st[status] += 1
             continue
@@ -122,10 +122,10 @@ def main():
             for lid, q in cnt.items():
                 l = byid[lid]
                 custo = sum(unidades(l)[:q]) if q != l["qtd"] else l["custo"]
-                out.append(dict(cnpj=l["row"]["cnpj"], data_venda=dia, seq_dia=lid, controle=vs[k]["controle"], qtd=q,
+                out.append(dict(cnpj=l["row"]["cnpj"], loja=l["row"].get("loja", ""), data_venda=dia, seq_dia=lid, controle=vs[k]["controle"], qtd=q,
                                 vr_liquido=f'{aloc[(k, lid)]/100:.2f}', vr_custo=f'{custo/100:.2f}', status_vinculo=status))
         for l in ls: st[status] += 1
-    cols = ["cnpj", "data_venda", "seq_dia", "controle", "qtd", "vr_liquido", "vr_custo", "status_vinculo"]
+    cols = ["cnpj", "loja", "data_venda", "seq_dia", "controle", "qtd", "vr_liquido", "vr_custo", "status_vinculo"]
     with open(d / "fato_venda_item_vinculo.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, delimiter=";"); w.writeheader(); w.writerows(out)
     tot = sum(st.values())

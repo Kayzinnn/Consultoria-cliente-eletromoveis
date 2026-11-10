@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS controle_carga (
     id_carga              serial       PRIMARY KEY,
     carregado_em          timestamptz  NOT NULL DEFAULT now(),
     cnpj                  char(18)     NOT NULL REFERENCES dim_empresa,
+    loja                  text         NOT NULL DEFAULT '',
     arquivo_produto       text, periodo_produto_ini date, periodo_produto_fim date,
     arquivo_venda         text, periodo_venda_ini   date, periodo_venda_fim   date,
     linhas_item           int, linhas_venda int,
@@ -60,6 +61,7 @@ CREATE TABLE IF NOT EXISTS controle_carga (
 -- Vendas (1 linha por controle/cupom) — relatório "Lucratividade por venda" ----
 CREATE TABLE IF NOT EXISTS fato_venda (
     cnpj                 char(18)      NOT NULL REFERENCES dim_empresa,
+    loja                 text          NOT NULL DEFAULT '',  -- pasta entrada\vendas\<LOJA>
     controle             varchar(20)   NOT NULL,           -- AAAAMMDDHHMMSS
     data_venda           date          NOT NULL,
     data_hora            timestamp,
@@ -73,14 +75,15 @@ CREATE TABLE IF NOT EXISTS fato_venda (
     arquivo_origem       text,
     pagina               int,
     id_carga             int REFERENCES controle_carga,
-    PRIMARY KEY (cnpj, controle)
+    PRIMARY KEY (cnpj, loja, controle)
 );
-CREATE INDEX IF NOT EXISTS ix_fato_venda_data ON fato_venda (cnpj, data_venda);
+CREATE INDEX IF NOT EXISTS ix_fato_venda_data ON fato_venda (cnpj, loja, data_venda);
 
 -- Itens vendidos (produto x dia) — relatório "Lucratividade por produto" -------
 -- Atenção: o ERP agrupa por dia o mesmo produto; qtd 2 pode ser 2 vendas diferentes.
 CREATE TABLE IF NOT EXISTS fato_venda_item (
     cnpj                 char(18)      NOT NULL REFERENCES dim_empresa,
+    loja                 text          NOT NULL DEFAULT '',
     data_venda           date          NOT NULL,
     seq_dia              int           NOT NULL,           -- ordem da linha no dia
     cod_produto          varchar(20)   NOT NULL REFERENCES dim_produto,
@@ -94,13 +97,14 @@ CREATE TABLE IF NOT EXISTS fato_venda_item (
     arquivo_origem       text,
     pagina               int,
     id_carga             int REFERENCES controle_carga,
-    PRIMARY KEY (cnpj, data_venda, seq_dia)
+    PRIMARY KEY (cnpj, loja, data_venda, seq_dia)
 );
 CREATE INDEX IF NOT EXISTS ix_fato_item_produto ON fato_venda_item (cod_produto);
 
 -- Ponte item x venda (deduzida pelo script vincular_itens_vendas.py) -----------
 CREATE TABLE IF NOT EXISTS fato_venda_item_vinculo (
     cnpj            char(18)      NOT NULL,
+    loja            text          NOT NULL DEFAULT '',
     data_venda      date          NOT NULL,
     seq_dia         int           NOT NULL,
     controle        varchar(20)   NOT NULL DEFAULT '',     -- '' quando SEM_VINCULO
@@ -109,8 +113,8 @@ CREATE TABLE IF NOT EXISTS fato_venda_item_vinculo (
     vr_custo        numeric(14,2) NOT NULL,
     status_vinculo  text          NOT NULL CHECK (status_vinculo IN ('UNICO','AMBIGUO','SEM_VINCULO')),
     id_carga        int REFERENCES controle_carga,
-    PRIMARY KEY (cnpj, data_venda, seq_dia, controle),
-    FOREIGN KEY (cnpj, data_venda, seq_dia) REFERENCES fato_venda_item ON DELETE CASCADE
+    PRIMARY KEY (cnpj, loja, data_venda, seq_dia, controle),
+    FOREIGN KEY (cnpj, loja, data_venda, seq_dia) REFERENCES fato_venda_item ON DELETE CASCADE
 );
 
 -- Calendário 2024–2030 (idempotente) ------------------------------------------

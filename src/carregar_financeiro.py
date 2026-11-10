@@ -93,6 +93,21 @@ def carregar_caixa(cur, d, forcar):
         print(f"Caixa diário: carga {idc} — {m['nome']}: {len(D)} dias, {n} lançamentos")
 
 
+def carregar_regras_conta(cur):
+    """Plano de contas das saídas do caixa: config/regras_conta_caixa.csv -> financeiro.regra_conta."""
+    p = RAIZ / "config" / "regras_conta_caixa.csv"
+    if not p.exists():
+        return
+    cur.execute("SELECT to_regclass('financeiro.regra_conta')")
+    if cur.fetchone()[0] is None:
+        print("Aviso: tabela regra_conta não existe — rode python criar_banco.py"); return
+    regras = ler_csv(p)
+    cur.execute("DELETE FROM regra_conta")
+    execute_values(cur, "INSERT INTO regra_conta (prioridade, padrao, conta, grupo_dre, entra_no_dre) VALUES %s",
+                   [(int(r["prioridade"]), r["padrao"], r["conta"], r["grupo_dre"], r["entra_no_dre"] == "1") for r in regras])
+    print(f"Plano de contas do caixa: {len(regras)} regras carregadas")
+
+
 def main():
     d = Path(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else "saida/financeiro")
     forcar = "--forcar" in sys.argv
@@ -101,6 +116,7 @@ def main():
     try:
         with conn, conn.cursor() as cur:
             cur.execute("SET search_path TO financeiro")
+            carregar_regras_conta(cur)
             if (d / "contas_pagar_meta.json").exists():
                 carregar_contas_pagar(cur, d, forcar)
             if (d / "caixa_meta.json").exists():

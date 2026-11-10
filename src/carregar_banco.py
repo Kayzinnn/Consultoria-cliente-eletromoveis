@@ -47,6 +47,7 @@ def main():
     empresa = ler_csv(saida / "dim_empresa.csv")[0]
     regras = ler_csv(RAIZ / "config" / "regras_categoria.csv")
     cnpj = meta["cnpj"]
+    loja = meta.get("loja", "")
     p_ini, p_fim = meta["periodo_produto"]
     v_ini, v_fim = meta["periodo_venda"]
 
@@ -81,34 +82,34 @@ def main():
                                        atualizado_em = now()""",
                            [(k, v["desc"], v["ini"], v["fim"]) for k, v in prods.items()])
 
-            cur.execute("""INSERT INTO controle_carga (cnpj, arquivo_produto, periodo_produto_ini, periodo_produto_fim,
+            cur.execute("""INSERT INTO controle_carga (cnpj, loja, arquivo_produto, periodo_produto_ini, periodo_produto_fim,
                                 arquivo_venda, periodo_venda_ini, periodo_venda_fim, linhas_item, linhas_venda, total_liquido)
-                           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id_carga""",
-                        (cnpj, meta["arquivo_produto"], p_ini, p_fim, meta["arquivo_venda"], v_ini, v_fim,
+                           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id_carga""",
+                        (cnpj, loja, meta["arquivo_produto"], p_ini, p_fim, meta["arquivo_venda"], v_ini, v_fim,
                          meta["linhas_item"], meta["linhas_venda"], meta["total_liquido_vendas"]))
             id_carga = cur.fetchone()[0]
 
             # substitui o período do relatório
-            cur.execute("DELETE FROM fato_venda_item WHERE cnpj=%s AND data_venda BETWEEN %s AND %s", (cnpj, p_ini, p_fim))
+            cur.execute("DELETE FROM fato_venda_item WHERE cnpj=%s AND loja=%s AND data_venda BETWEEN %s AND %s", (cnpj, loja, p_ini, p_fim))
             n_del_i = cur.rowcount
-            cur.execute("DELETE FROM fato_venda WHERE cnpj=%s AND data_venda BETWEEN %s AND %s", (cnpj, v_ini, v_fim))
+            cur.execute("DELETE FROM fato_venda WHERE cnpj=%s AND loja=%s AND data_venda BETWEEN %s AND %s", (cnpj, loja, v_ini, v_fim))
             n_del_v = cur.rowcount
 
-            execute_values(cur, """INSERT INTO fato_venda_item (cnpj, data_venda, seq_dia, cod_produto, descricao_original, qtd,
+            execute_values(cur, """INSERT INTO fato_venda_item (cnpj, loja, data_venda, seq_dia, cod_produto, descricao_original, qtd,
                                        vr_bruto, vr_desc_acres, vr_liquido, vr_custo, vr_lucro,
                                        arquivo_origem, pagina, id_carga) VALUES %s""",
-                           [(cnpj, r["data_venda"], r["seq_dia"], r["cod_produto"], r["descricao"], r["qtd"], r["vr_bruto"],
+                           [(cnpj, loja, r["data_venda"], r["seq_dia"], r["cod_produto"], r["descricao"], r["qtd"], r["vr_bruto"],
                              r["vr_desc_acres"], r["vr_liquido"], r["vr_custo"], r["vr_lucro"],
                              r["arquivo_origem"], r["pagina"], id_carga) for r in itens], page_size=1000)
-            execute_values(cur, """INSERT INTO fato_venda (cnpj, controle, data_venda, data_hora, tipo, vr_bruto, vr_desc_acres,
+            execute_values(cur, """INSERT INTO fato_venda (cnpj, loja, controle, data_venda, data_hora, tipo, vr_bruto, vr_desc_acres,
                                        vr_liquido, vr_custo, vr_lucro, vr_coluna_extra,
                                        arquivo_origem, pagina, id_carga) VALUES %s""",
-                           [(cnpj, r["controle"], r["data_venda"], r["data_hora"], r["tipo"], r["vr_bruto"], r["vr_desc_acres"],
+                           [(cnpj, loja, r["controle"], r["data_venda"], r["data_hora"], r["tipo"], r["vr_bruto"], r["vr_desc_acres"],
                              r["vr_liquido"], r["vr_custo"], r["vr_lucro"], r["vr_coluna_extra"],
                              r["arquivo_origem"], r["pagina"], id_carga) for r in vendas], page_size=1000)
-            execute_values(cur, """INSERT INTO fato_venda_item_vinculo (cnpj, data_venda, seq_dia, controle, qtd,
+            execute_values(cur, """INSERT INTO fato_venda_item_vinculo (cnpj, loja, data_venda, seq_dia, controle, qtd,
                                        vr_liquido, vr_custo, status_vinculo, id_carga) VALUES %s""",
-                           [(cnpj, r["data_venda"], r["seq_dia"], r["controle"] or "", r["qtd"], r["vr_liquido"],
+                           [(cnpj, loja, r["data_venda"], r["seq_dia"], r["controle"] or "", r["qtd"], r["vr_liquido"],
                              r["vr_custo"], r["status_vinculo"], id_carga) for r in vinc], page_size=1000)
 
             # conferência dentro da transação: banco precisa bater com o PDF
@@ -119,7 +120,7 @@ def main():
             if f"{tot_i:.2f}" != meta["total_liquido_itens"] or f"{tot_v:.2f}" != meta["total_liquido_vendas"]:
                 raise RuntimeError(f"Totais no banco não batem com o PDF: itens {tot_i} / vendas {tot_v}")
 
-        print(f"Carga {id_carga} OK — {meta['razao_social']} ({cnpj})")
+        print(f"Carga {id_carga} OK — {meta['razao_social']} ({cnpj}) — loja {loja or '(sem loja)'}")
         print(f"  itens : {len(itens):5d} inseridos ({n_del_i} substituídos) — {p_ini} a {p_fim}")
         print(f"  vendas: {len(vendas):5d} inseridas ({n_del_v} substituídas) — {v_ini} a {v_fim}")
         print(f"  líquido conferido: R$ {tot_v:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))

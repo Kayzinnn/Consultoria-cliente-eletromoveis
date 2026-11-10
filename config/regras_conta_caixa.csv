@@ -1,0 +1,19 @@
+prioridade;padrao;conta;grupo_dre;entra_no_dre
+10;PESSOAL|\mCASA\M|\mCPF\M|COLEGIO|COLÉGIO|ESCOLA|LIVROS|INJECAO|INJEÇÃO|DEP\.?JUNIOR|BLACK|\mDRA\M|HORMON;Despesas pessoais dos sócios;Não operacional - sócios;0
+15;^COMPRA (HILUX|CARRO|MOTO|VEICULO|VEÍCULO|TERRENO|IMOVEL|IMÓVEL);Compra de veículo / imobilizado;Investimentos;0
+16;TERRENO|IMOVEL|IMÓVEL|COMPUTADOR|\mCOMP\.|NOTEBOOK|ACESSORIOS HILUX|ACESSÓRIOS HILUX;Investimentos (terreno, equipamentos, veículos);Investimentos;0
+20;PRO.?LABORE|PRÓ.?LABORE;Pró-labore;Pró-labore;1
+30;CAPITAL DE GIRO|EMPRESTIMO|EMPRÉSTIMO|^BNB|FINANCIAMENTO|CONSORCIO|CONSÓRCIO;Empréstimos e financiamentos (parcelas);Financeiro - amortização;0
+35;PRESTA[CÇ][AÃ]O DE CONTAS|TRANSF\.? ?ENTRE|SUPRIMENTO|SANGRIA;Transferências entre lojas/caixas;Transferências;0
+40;SALARIO|SALÁRIO|COMISS|FGTS|RESCIS|FERIAS|FÉRIAS|13º|DECIMO|DÉCIMO|INSS|\mVALE\M|ADIANTAMENTO|ALM\.? ?FUN|ALMOÇO|ALMOCO|DEMISS|UNIMED|PLANO DE SA|GRATIFICA|FUNCIONARIO|FUNCIONÁRIO|ADMISS|CARTEIRA;Pessoal (salários, comissões, encargos, benefícios);Despesas com pessoal;1
+50;^DAE|DARF|DASN|^DAS\M|IMPOSTO|COFINS|ICMS|SIMPLES|\mPIS\M|\mISS\M|^IMP\.;Impostos e taxas;Impostos;1
+60;ALUGUEL|ENERGIA|ENRGIA|CAGECE|\mAGUA|ÁGUA|AGUAS|INTERNET|TELEFONE|CONDOMINIO;Ocupação (aluguel, energia, água, internet);Despesas de ocupação;1
+62;PINTURA|PEDREIRO|ESTANTE|EXPOSITOR|L[AÂ]MPADA|IMAGENS|REFORMA|CALHA|ELETRICISTA;Manutenção e melhorias das lojas;Despesas de ocupação;1
+70;FRETE|ENT\. ?POLO|ENTREGA|CARRETO;Fretes e entregas;Despesas logísticas;1
+75;GASOLINA|COMBUST|DIESEL|OLEO|ÓLEO|REVIS|PNEU|IPVA|LICENCIAMENTO|DOCUMENTO|MECANIC|MECÂNIC|OFICINA|LAVA JATO|MOTO|DETRAN|STRADA;Veículos e combustível;Despesas logísticas;1
+80;TARIFA|JUROS|\mIOF\M|ANUIDADE|COBRAN;Tarifas e encargos bancários;Despesas financeiras;1
+85;CONTAB|SISTEMA|HONOR|ADVOG|CONSULT;Serviços administrativos (contador, sistemas);Despesas administrativas;1
+90;CAMERA|CÂMERA|SEGURO|MATERIAL|LIMPEZA|DESINFET|PAPEL|MANUTEN|SERVIÇO|SERVICO|CONSERTO|DESPESAS|DIVERSOS|REUNIAO|REUNIÃO|NATAL|EVENTO|PROPAGANDA|MARKETING|ANUNCIO|ANÚNCIO|SACOLA|EMBALAGEM|\mCAF[EÉ]\M|ASSAI|ASSAÍ|SUPERMERCADO|LANCHE;Despesas gerais;Despesas administrativas;1
+92;VIAGEM|PASSAGEM|GRAMADO|HOSPEDAGEM|HOTEL;Viagens (a confirmar se é da empresa);Despesas administrativas;1
+95;CARTAO|CARTÃO;Cartão de crédito (a detalhar);Despesas administrativas;1
+98;CASAS BAHIA|LIQUIDIFICADORES|^\d+ VENTILADOR|^CHIPS;Compras de mercadoria (varejo);Compras de mercadoria;0
