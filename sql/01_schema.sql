@@ -100,6 +100,10 @@ CREATE TABLE IF NOT EXISTS fato_venda_item (
     PRIMARY KEY (cnpj, loja, data_venda, seq_dia)
 );
 CREATE INDEX IF NOT EXISTS ix_fato_item_produto ON fato_venda_item (cod_produto);
+-- Ortobom: o relatório não traz custo -> custo_informado = false (vr_custo estimado ou 0)
+ALTER TABLE fato_venda_item ADD COLUMN IF NOT EXISTS custo_informado boolean NOT NULL DEFAULT true;
+-- Categoria que vem pronta do sistema de origem (Ortobom); vira categoria_manual pelo config/categoria_origem.csv
+ALTER TABLE dim_produto ADD COLUMN IF NOT EXISTS categoria_origem text;
 
 -- Ponte item x venda (deduzida pelo script vincular_itens_vendas.py) -----------
 CREATE TABLE IF NOT EXISTS fato_venda_item_vinculo (

@@ -58,9 +58,9 @@ def cabecalho(path: Path):
         if m and "cnpj" not in info:
             info["cnpj"] = m.group(1)
             info["razao"] = s[:m.start()].strip()
-        m = re.match(r"^([A-Z]{2}) (\d+)$", s)
-        if m and "ie" not in info:
-            info["uf"], info["ie"] = m.groups()
+        m = re.match(r"^([A-Z]{2})(?: (\d+))?$", s)      # "CE 96988104" ou só "CE" (exportação sem IE)
+        if m and "uf" not in info and "cnpj" in info:
+            info["uf"], info["ie"] = m.group(1), m.group(2) or ""
         m = re.search(r"PERÍODO LISTADO: (\d{2}/\d{2}/\d{4}) à (\d{2}/\d{2}/\d{4})", s)
         if m:
             info["periodo_ini"], info["periodo_fim"] = m.groups()
@@ -75,13 +75,14 @@ def is_noise(s: str, info) -> bool:
         return True
     if info.get("cnpj") and info["cnpj"] in s:
         return True
-    if info.get("ie") and s == f'{info["uf"]} {info["ie"]}':
+    if info.get("uf") and s == f'{info["uf"]} {info["ie"]}'.strip():
         return True
     return False
 
 
 # ----------------------------------------------------------------------------- produto
-ITEM = re.compile(rf"^(\d{{13}}) -\s?(.*?)\s+(-?\d+)\s+({MONEY})\s+({MONEY})\s+({MONEY})\s+({MONEY})\s+({MONEY})(?:\s*(-?[\d.]+,\d{{2}})%)?\s*$")
+# código: 13 dígitos; aceita também código curto/estranho cadastrado no ERP (ex.: "]")
+ITEM = re.compile(rf"^(\d{{13}}|\S{{1,12}}) -\s?(.*?)\s+(-?\d+)\s+({MONEY})\s+({MONEY})\s+({MONEY})\s+({MONEY})\s+({MONEY})(?:\s*(-?[\d.]+,\d{{2}})%)?\s*$")
 PCT_SO = re.compile(r"^(-?[\d.]+,\d{2})%$")
 SUB_P = re.compile(rf"^(SUB-TOTAL|TOTAL):\s+(-?\d+)\s+({NUM})\s+({NUM})\s+({NUM})\s+({NUM})\s+({NUM})\s*(-?[\d.]+,\d{{2}})%")
 

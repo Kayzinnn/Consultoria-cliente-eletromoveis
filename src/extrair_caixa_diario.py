@@ -90,13 +90,54 @@ def mapa_entradas():
         return {r["rotulo"].strip().upper(): r for r in csv.DictReader(f, delimiter=";")}
 
 
+MESES = {"JANEIRO": 1, "FEVEREIRO": 2, "MARÇO": 3, "MARCO": 3, "ABRIL": 4, "MAIO": 5, "JUNHO": 6, "JULHO": 7,
+         "AGOSTO": 8, "SETEMBRO": 9, "OUTUBRO": 10, "NOVEMBRO": 11, "DEZEMBRO": 12,
+         "JAN": 1, "FEV": 2, "MAR": 3, "ABR": 4, "MAI": 5, "JUN": 6, "JUL": 7, "AGO": 8, "SET": 9, "OUT": 10, "NOV": 11, "DEZ": 12}
+LOJA_TOKENS = [(r"\b(GRA|GRAÇA|GRACA)\b", "GRAÇA"), (r"\b(MUC|MUCAMBO)\b", "MUCAMBO"), (r"\b(CAR|CARNAUBAL|CARNAÚBAL)\b", "CARNAUBAL")]
+MEIO_TOKENS = [(r"\bBLU\b", "Cartão (Blu)"), (r"\bSTONE\b", "Cartão (Stone)"), (r"\bPIX\b", "Pix"),
+               (r"\b(ITAU|ITAÚ)\b", "Banco (Itaú)"), (r"\b(BRAD|BRADESCO)\b", "Banco (Bradesco)"),
+               (r"\b(CAIXA|CX)\b", "Banco (Caixa)"), (r"\bBNB\b", "Banco (BNB)"), (r"\bBANCO\b", "Banco"),
+               (r"\b(DIN|DINHEIRO|ENT)\b", "Dinheiro/loja")]
+
+
+def negocio_do_arquivo(arq: Path):
+    return "ORTOBOM" if "ORTOBOM" in arq.name.upper() else "ELETROMÓVEIS"
+
+
+def inferir_entrada(rot):
+    """(loja, meio) pelo texto do rótulo: 'DIN MUC' -> (MUCAMBO, Dinheiro/loja); 'BLU' -> ('', Cartão (Blu))."""
+    t = re.sub(r"[.+/]", " ", rot.upper())
+    loja = next((l for pat, l in LOJA_TOKENS if re.search(pat, t)), "")
+    meio = next((m for pat, m in MEIO_TOKENS if re.search(pat, t)), "")
+    return loja, meio
+
+
+def mes_da_aba(titulo):
+    """'NOVEMBRO' -> (11, None); 'DEZ2025' -> (12, 2025); outras abas -> None."""
+    t = titulo.strip().upper()
+    m = re.fullmatch(r"([A-ZÇ]+)\s*(\d{4})?", t)
+    if m and m.group(1) in MESES:
+        return MESES[m.group(1)], (int(m.group(2)) if m.group(2) else None)
+    return None
+
+
 def extrair(arq: Path, mapa):
     wb, wf, h = abrir(arq)
+    negocio = negocio_do_arquivo(arq)
     lancs, dias, erros, avisos = [], [], [], []
     for ws in wb:
         maxr, maxc = ws.max_row, ws.max_column
         grid = {(c.row, c.column): c.value for row in ws.iter_rows() for c in row if c.value is not None}
         fws = wf[ws.title]
+        # aba de mês cujas datas não são daquele mês (ex.: aba copiada sem atualizar as datas): pula com aviso
+        datas_aba = [v.date() for (r, c), v in grid.items() if isinstance(v, datetime) and isinstance(grid.get((r, c - 1)), str)]
+        mm = mes_da_aba(ws.title)
+        if mm and datas_aba:
+            certas = [d for d in datas_aba if d.month == mm[0] and (mm[1] is None or d.year == mm[1])]
+            if len(certas) < len(datas_aba) / 2:
+                avisos.append(f"ABA IGNORADA: {arq.name} › {ws.title} está com datas de {min(datas_aba):%d/%m/%Y} a "
+                              f"{max(datas_aba):%d/%m/%Y}, que não são do mês da aba. Corrija as datas e rode de novo.")
+                continue
         for (r, c), v in sorted(grid.items()):
             if not (isinstance(v, datetime) and isinstance(grid.get((r, c - 1)), str)):
                 continue
@@ -104,6 +145,7 @@ def extrair(arq: Path, mapa):
             dia = dict(arquivo=arq.name, aba=ws.title, data=d.isoformat(), celula=f"{get_column_letter(col_v)}{r}")
             secao, ent, sai, ordem = "ENTRADA", Decimal(0), Decimal(0), 0
             pend = []          # lançamentos do bloco, para marcar se entram no total da planilha
+            ultima_loja = ""   # "BANCO" logo abaixo de "ENT.GRAÇA" é o banco da Graça
             rr = r + 1
             while rr <= maxr:
                 lab, val = grid.get((rr, col_l)), grid.get((rr, col_v))
@@ -130,15 +172,26 @@ def extrair(arq: Path, mapa):
                         nv = Decimal(0)
                     if nv != 0 or rot:
                         ordem += 1
-                        m = mapa.get(ru) if secao == "ENTRADA" else None
-                        if secao == "ENTRADA" and m is None and nv != 0:
-                            avisos.append(f"rótulo de entrada sem mapa: {rot!r} ({ws.title} {d})")
+                        loja = meio = conta = ""
+                        if secao == "ENTRADA":
+                            m = mapa.get(ru)
+                            if m:
+                                loja, meio, conta = m.get("loja", ""), m.get("meio", ""), m.get("conta", "")
+                            else:
+                                loja, meio = inferir_entrada(rot)
+                                if not loja and meio.startswith("Banco") and ru.strip() == "BANCO":
+                                    loja = ultima_loja
+                                if not (meio or loja) and nv != 0:
+                                    avisos.append(f"rótulo de entrada sem mapa: {rot!r} ({ws.title} {d})")
+                            if loja: ultima_loja = loja
+                            if negocio == "ORTOBOM":
+                                loja = f"ORTOBOM {loja}".strip()
+                            conta = conta or " ".join(x for x in (meio, loja.title()) if x)
                         if nv != 0:
                             pend.append(dict(_rc=(rr, col_v), entra_no_total="1",arquivo=arq.name, aba=ws.title, celula=f"{get_column_letter(col_v)}{rr}",
                                               data=d.isoformat(), tipo=secao, ordem=ordem, descricao=rot,
                                               valor=f"{q2(nv)}",
-                                              loja=(m or {}).get("loja", ""), meio=(m or {}).get("meio", ""),
-                                              conta=(m or {}).get("conta", "")))
+                                              loja=loja, meio=meio, conta=conta, negocio=negocio))
                 rr += 1
             for x in pend:
                 v = Decimal(x["valor"])
@@ -179,9 +232,11 @@ def main():
         L += l; D += d; E += e; A += av
         metas.append(dict(arquivo=str(a), nome=a.name, sha256=h, linhas=len(l), dias=len(d),
                           modificado_em=datetime.fromtimestamp(a.stat().st_mtime).isoformat(timespec="seconds")))
-    D.sort(key=lambda x: x["data"])
+    D.sort(key=lambda x: (x["arquivo"], x["data"]))
     ant = None
-    for d in D:   # diferença de abertura em relação ao dia anterior
+    for d in D:   # diferença de abertura em relação ao dia anterior (dentro do mesmo arquivo)
+        if ant and ant["arquivo"] != d["arquivo"]:
+            ant = None
         d["saldo_final_anterior"] = ant["saldo_final"] if ant else None
         d["diferenca_abertura"] = (q2(d["saldo_inicial"] - ant["saldo_final"]) if ant else None)
         ant = d
@@ -193,7 +248,7 @@ def main():
         w = csv.writer(f, delimiter=";"); w.writerow(cols)
         for d in D:
             w.writerow(["" if d.get(c) is None else (f"{q2(d[c])}" if isinstance(d[c], Decimal) else d[c]) for c in cols])
-    avisos = sorted(set(A), key=lambda x: (not x.startswith("rótulo"), x))
+    avisos = sorted(set(A), key=lambda x: (not x.startswith("ABA IGNORADA"), not x.startswith("rótulo"), x))
     meta = dict(arquivos=metas, linhas=len(L), dias=len(D), validacao_ok=not E, erros=E, avisos=avisos,
                 total_entradas=f"{sum(Decimal(x['valor']) for x in L if x['tipo']=='ENTRADA')}",
                 total_saidas=f"{sum(Decimal(x['valor']) for x in L if x['tipo']=='SAIDA')}")

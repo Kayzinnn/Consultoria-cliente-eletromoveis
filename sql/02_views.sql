@@ -26,7 +26,8 @@ CREATE OR REPLACE VIEW vw_venda_item AS
 SELECT i.cnpj, COALESCE(NULLIF(i.loja, ''), e.nome_loja, e.razao_social) AS loja, i.data_venda, i.seq_dia,
        i.cod_produto, p.descricao, p.categoria, p.grupo, p.nao_e_mercadoria,
        i.qtd, i.vr_bruto, i.vr_desc_acres, i.vr_liquido, i.vr_custo, i.vr_lucro,
-       (i.vr_custo <= 0.01 * i.qtd) AS custo_nao_cadastrado
+       (i.vr_custo <= 0.01 * i.qtd) AS custo_nao_cadastrado,
+       i.custo_informado
 FROM fato_venda_item i
 JOIN dim_empresa e USING (cnpj)
 JOIN vw_produto  p USING (cod_produto);

@@ -79,6 +79,14 @@ table 'vendas dim_produto'
 
 		annotation SummarizationSetBy = Automatic
 
+	column categoria_origem
+		dataType: string
+		lineageTag: 184e80f4-fd37-4463-b60e-8fd21dca260d
+		summarizeBy: none
+		sourceColumn: categoria_origem
+
+		annotation SummarizationSetBy = Automatic
+
 	partition 'vendas dim_produto' = m
 		mode: import
 		source =

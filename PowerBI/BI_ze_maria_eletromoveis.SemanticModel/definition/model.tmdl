@@ -23,6 +23,8 @@ ref table LocalDateTable_f65eeef1-05ba-4e75-afbf-5935ef0d7525
 ref table LocalDateTable_0d03e075-4544-4779-93f1-750c0497eb2b
 ref table LocalDateTable_2d02cd4c-d88d-4147-b4ba-36941b9ab59e
 ref table _Medidas
+ref table d_DRE
+ref table Parâmetro
 
 ref cultureInfo pt-BR
 

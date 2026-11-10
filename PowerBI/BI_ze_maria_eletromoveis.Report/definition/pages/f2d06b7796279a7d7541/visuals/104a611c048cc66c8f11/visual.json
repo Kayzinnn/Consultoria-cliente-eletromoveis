@@ -3,10 +3,10 @@
   "name": "104a611c048cc66c8f11",
   "position": {
     "x": 170,
-    "y": 880,
+    "y": 826,
     "z": 3200,
-    "height": 316,
-    "width": 1765,
+    "height": 370,
+    "width": 1766,
     "tabOrder": 3200
   },
   "visual": {
@@ -133,13 +133,12 @@
                     "Entity": "_Medidas"
                   }
                 },
-                "Property": "Vendas Acum"
+                "Property": "Lucro Acum"
               }
             },
             "direction": "Descending"
           }
-        ],
-        "isDefaultSort": true
+        ]
       }
     },
     "objects": {
@@ -206,8 +205,9 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.1
                     }
                   }
                 }
@@ -218,7 +218,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#1B2440'"
                     }
                   }
                 }
@@ -228,6 +228,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'Segoe UI Semibold'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "15D"
                 }
               }
             }
@@ -280,6 +287,13 @@
                   }
                 }
               }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "15D"
+                }
+              }
             }
           }
         }
@@ -323,6 +337,22 @@
                 }
               }
             }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "1042D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "financeiro vw_fato_principal.loja"
           }
         }
       ]

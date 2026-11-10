@@ -78,9 +78,9 @@ def carregar_caixa(cur, d, forcar):
         idc = nova_carga(cur, "CAIXA_DIARIO", m, len(L), f"{total:.2f}", meta["avisos"])
         cur.execute("DELETE FROM fato_caixa_lancamento WHERE arquivo=%s", (m["nome"],))
         cur.execute("DELETE FROM fato_caixa_dia WHERE arquivo=%s", (m["nome"],))
-        cl = ["aba", "celula", "data", "tipo", "ordem", "descricao", "valor", "loja", "meio", "conta", "entra_no_total"]
+        cl = ["aba", "celula", "data", "tipo", "ordem", "descricao", "valor", "loja", "meio", "conta", "entra_no_total", "negocio"]
         execute_values(cur, f"INSERT INTO fato_caixa_lancamento (arquivo, {', '.join(cl)}, id_carga) VALUES %s",
-                       [(m["nome"], *[(r[c] == "1") if c == "entra_no_total" else r[c] for c in cl], idc) for r in L],
+                       [(m["nome"], *[(r[c] == "1") if c == "entra_no_total" else r.get(c, "") for c in cl], idc) for r in L],
                        page_size=2000)
         cd = ["aba", "celula", "data", "saldo_inicial", "total_entrada", "total_saida", "saldo_final",
               "saldo_final_recalculado", "saldo_final_anterior", "diferenca_abertura", "entradas_fora_total", "saidas_fora_total"]
@@ -106,6 +106,17 @@ def carregar_regras_conta(cur):
     execute_values(cur, "INSERT INTO regra_conta (prioridade, padrao, conta, grupo_dre, entra_no_dre) VALUES %s",
                    [(int(r["prioridade"]), r["padrao"], r["conta"], r["grupo_dre"], r["entra_no_dre"] == "1") for r in regras])
     print(f"Plano de contas do caixa: {len(regras)} regras carregadas")
+    p = RAIZ / "config" / "regras_loja_caixa.csv"
+    if p.exists():
+        cur.execute("SELECT to_regclass('financeiro.regra_loja')")
+        if cur.fetchone()[0] is None:
+            print("Aviso: tabela regra_loja não existe — rode python criar_banco.py"); return
+        with open(p, encoding="utf-8") as f:
+            rl = list(csv.DictReader((l for l in f if l.strip() and not l.startswith("#")), delimiter=";"))
+        cur.execute("DELETE FROM regra_loja")
+        execute_values(cur, "INSERT INTO regra_loja (prioridade, padrao, negocio, loja) VALUES %s",
+                       [(int(r["prioridade"]), r["padrao"], (r.get("negocio") or "").strip() or None, r["loja"].strip()) for r in rl])
+        print(f"Lojas das despesas do caixa: {len(rl)} regras carregadas")
 
 
 def main():

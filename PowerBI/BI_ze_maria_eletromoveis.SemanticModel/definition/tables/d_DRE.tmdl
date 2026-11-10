@@ -1,0 +1,42 @@
+/// Estrutura das linhas da DRE (ordem, rótulo e como cada linha é calculada). Usada pela medida [DRE Valor].
+table d_DRE
+	lineageTag: 32357446-f140-4d76-b5bf-b33f2d5b68d7
+
+	column Ordem
+		formatString: 0
+		lineageTag: 0505d07e-f6e2-4bd7-ab4e-2c810c3ef4a9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Ordem]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Linha
+		lineageTag: 9b42df98-52fe-4dba-aa23-03426b48d704
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Linha]
+		sortByColumn: Ordem
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		lineageTag: fd8b4404-3561-4801-ac89-01ba9de5e525
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Tipo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Grupo
+		lineageTag: c0abfcb4-18d0-4cd8-9f8b-ba94b28863b1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Grupo]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_DRE = calculated
+		mode: import
+		source = DATATABLE("Ordem", INTEGER, "Linha", STRING, "Tipo", STRING, "Grupo", STRING, { {10, "Receita bruta de vendas", "grupo", "Receita bruta de vendas"}, {20, "(±) Descontos e acréscimos", "grupo", "Descontos e acréscimos"}, {30, "Outras receitas", "grupo", "Outras receitas"}, {40, "(=) RECEITA LÍQUIDA", "receita_liquida", ""}, {50, "(-) Custo da mercadoria vendida", "grupo", "Custo da mercadoria vendida"}, {60, "(=) LUCRO BRUTO", "lucro_bruto", ""}, {65, "Margem bruta %", "margem_bruta", ""}, {70, "(-) Despesas com pessoal", "grupo", "Despesas com pessoal"}, {75, "(-) Pró-labore", "grupo", "Pró-labore"}, {80, "(-) Impostos", "grupo", "Impostos"}, {85, "(-) Despesas de ocupação", "grupo", "Despesas de ocupação"}, {90, "(-) Despesas logísticas", "grupo", "Despesas logísticas"}, {95, "(-) Despesas administrativas", "grupo", "Despesas administrativas"}, {100, "(-) Despesas financeiras", "grupo", "Despesas financeiras"}, {105, "(-) Despesas a classificar", "grupo", "A classificar"}, {110, "(=) TOTAL DE DESPESAS", "despesas", ""}, {120, "(=) RESULTADO DO EXERCÍCIO", "resultado", ""}, {125, "Margem líquida %", "margem_liquida", ""} })
+

@@ -2,7 +2,7 @@ table _Medidas
 	lineageTag: f4ec8296-a452-4408-a59e-f797607e3fa2
 
 	/// Valor bruto vendido (ERP), antes de descontos.
-	measure 'Receita Bruta' = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Receita bruta de vendas")
+	measure Faturamento = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = "Receita bruta de vendas")
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 01 Receita
 		lineageTag: 6b69c1ec-29e9-4e2f-94e8-4c529ebf88ac
@@ -31,13 +31,13 @@ table _Medidas
 		displayFolder: 01 Receita
 		lineageTag: 7199fbce-bc13-47d9-bb1d-a66e25242cd1
 
-	measure 'Preço Médio por Peça' = DIVIDE([Receita Bruta], [Qtd Vendida])
+	measure 'Preço Médio por Peça' = DIVIDE([Faturamento], [Qtd Vendida])
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 01 Receita
 		lineageTag: 3be40de3-456b-4ef3-bc12-475fe6dc3512
 
 	/// Desconto líquido sobre a receita bruta.
-	measure 'Desconto %' = DIVIDE(-[Descontos e Acréscimos], [Receita Bruta])
+	measure 'Desconto %' = DIVIDE(-[Descontos e Acréscimos], [Faturamento])
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 01 Receita
 		lineageTag: 51a29bed-6af4-4d0e-9ae6-b44c65ce9d11
@@ -234,7 +234,7 @@ table _Medidas
 		lineageTag: 19a36fd9-7e6b-45bf-a95e-f3de9fe9a581
 
 	/// Último dia do período filtrado que tem venda carregada. Base dos acumulados do painel.
-	measure 'Data de Referência' = VAR _ult = CALCULATE(MAX('financeiro vw_fato_principal'[data]), REMOVEFILTERS('financeiro vw_fato_principal'), 'financeiro vw_fato_principal'[origem] = "ERP vendas") RETURN CALCULATE(MAX(d_Calendario[Date]), d_Calendario[Date] <= _ult)
+	measure 'Data de Referência' = VAR _ult = CALCULATE(MAX('financeiro vw_fato_principal'[data]), REMOVEFILTERS('financeiro vw_fato_principal'), 'financeiro vw_fato_principal'[origem] = "ERP vendas") RETURN MAXX(FILTER(VALUES(d_Calendario[Date]), d_Calendario[Date] <= _ult), d_Calendario[Date])
 		formatString: dd/mm/yyyy
 		displayFolder: 07 Painel Resultados
 		lineageTag: da0db207-f614-4fb0-9ee9-d1f6febec216
@@ -340,7 +340,7 @@ table _Medidas
 		displayFolder: 08 Vendas Analítico
 		lineageTag: ffd99610-f106-4bdc-b45d-e1dd4e4c6e7a
 
-	measure 'Receita Bruta Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Bruta], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Receita Bruta Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Faturamento], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 08 Vendas Analítico
 		lineageTag: 2b9b5948-b854-4c1e-bd58-068c29a0f059
@@ -379,7 +379,7 @@ table _Medidas
 		lineageTag: 8f73207c-5a27-4a89-957c-fbf24f46c21f
 
 	measure 'Vendas Var % Ano Anterior' = VAR _a = [Vendas Acum Ano Anterior] RETURN IF(NOT ISBLANK(_a), DIVIDE([Vendas Acum] - _a, _a))
-		formatString: 0.0%;-0.0%;0.0%
+		formatString: "▲ "0.0%;"▼ "0.0%;0.0%
 		displayFolder: 08 Vendas Analítico
 		lineageTag: c8a642e2-5141-45fe-98a5-ba157fcdc1eb
 
@@ -568,6 +568,29 @@ table _Medidas
 			    )
 		displayFolder: 09 Cards HTML
 		lineageTag: 73c81da4-6bb9-4489-9582-d411e01104c3
+
+	/// Cor da fonte da variação vs ano anterior: verde se subiu, vermelho se caiu (formatação condicional).
+	measure 'Cor Var % Ano Anterior' = VAR _v = [Vendas Var % Ano Anterior] RETURN SWITCH(TRUE(), ISBLANK(_v), BLANK(), _v > 0, "#15803D", _v < 0, "#B91C1C", "#6B7280")
+		displayFolder: 10 Formatação
+		lineageTag: 6c48c462-d8aa-40e4-acdd-0a11242da145
+
+	/// Valor de cada linha da DRE: grupos somam a fato; linhas (=) são subtotais; margens em %.
+	measure 'DRE Valor' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _grupo = SELECTEDVALUE(d_DRE[Grupo]) RETURN SWITCH(_tipo, "grupo", CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = _grupo, 'financeiro vw_fato_principal'[entra_no_dre] = TRUE()), "receita_liquida", [Receita Líquida], "lucro_bruto", [Lucro Bruto], "margem_bruta", [Margem Bruta %], "despesas", [Despesas Operacionais], "resultado", [Resultado], "margem_liquida", [Margem Líquida %])
+		displayFolder: 11 DRE
+		lineageTag: 974b1491-3fb6-48f2-91b3-efdb5a53b425
+
+		formatStringDefinition = IF(SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_liquida"}, "0.0%;-0.0%;0.0%", "\R$ #,##0;-\R$ #,##0;\R$ #,##0")
+
+	/// % de cada linha sobre a receita líquida (análise vertical).
+	measure 'DRE % Receita' = IF(NOT SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_liquida"}, DIVIDE([DRE Valor], [Receita Líquida]))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 11 DRE
+		lineageTag: a20d3652-fbca-41a2-b7ae-3db43c33ef7a
+
+	/// Cor da fonte na DRE: subtotais em azul-marinho, resultado verde/vermelho, margens em cinza.
+	measure 'Cor DRE' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _v = [DRE Valor] RETURN SWITCH(TRUE(), _tipo IN {"resultado", "margem_liquida"} && _v < 0, "#B91C1C", _tipo = "resultado", "#15803D", _tipo IN {"receita_liquida", "lucro_bruto", "despesas"}, "#1B2440", _tipo IN {"margem_bruta", "margem_liquida"}, "#6B7280", "#111827")
+		displayFolder: 11 DRE
+		lineageTag: 6cff2e56-056e-4c9a-b7fa-769798e40004
 
 	column _
 		isHidden

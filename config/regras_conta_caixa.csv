@@ -1,5 +1,6 @@
 prioridade;padrao;conta;grupo_dre;entra_no_dre
 10;PESSOAL|\mCASA\M|\mCPF\M|COLEGIO|COLÉGIO|ESCOLA|LIVROS|INJECAO|INJEÇÃO|DEP\.?JUNIOR|BLACK|\mDRA\M|HORMON;Despesas pessoais dos sócios;Não operacional - sócios;0
+12;\mPOLO\M|TERESINA|KAUAN;Despesas pessoais (Polo / Teresina - filho);Não operacional - sócios;0
 15;^COMPRA (HILUX|CARRO|MOTO|VEICULO|VEÍCULO|TERRENO|IMOVEL|IMÓVEL);Compra de veículo / imobilizado;Investimentos;0
 16;TERRENO|IMOVEL|IMÓVEL|COMPUTADOR|\mCOMP\.|NOTEBOOK|ACESSORIOS HILUX|ACESSÓRIOS HILUX;Investimentos (terreno, equipamentos, veículos);Investimentos;0
 20;PRO.?LABORE|PRÓ.?LABORE;Pró-labore;Pró-labore;1
@@ -9,7 +10,7 @@ prioridade;padrao;conta;grupo_dre;entra_no_dre
 50;^DAE|DARF|DASN|^DAS\M|IMPOSTO|COFINS|ICMS|SIMPLES|\mPIS\M|\mISS\M|^IMP\.;Impostos e taxas;Impostos;1
 60;ALUGUEL|ENERGIA|ENRGIA|CAGECE|\mAGUA|ÁGUA|AGUAS|INTERNET|TELEFONE|CONDOMINIO;Ocupação (aluguel, energia, água, internet);Despesas de ocupação;1
 62;PINTURA|PEDREIRO|ESTANTE|EXPOSITOR|L[AÂ]MPADA|IMAGENS|REFORMA|CALHA|ELETRICISTA;Manutenção e melhorias das lojas;Despesas de ocupação;1
-70;FRETE|ENT\. ?POLO|ENTREGA|CARRETO;Fretes e entregas;Despesas logísticas;1
+70;FRETE|ENTREGA|CARRETO;Fretes e entregas;Despesas logísticas;1
 75;GASOLINA|COMBUST|DIESEL|OLEO|ÓLEO|REVIS|PNEU|IPVA|LICENCIAMENTO|DOCUMENTO|MECANIC|MECÂNIC|OFICINA|LAVA JATO|MOTO|DETRAN|STRADA;Veículos e combustível;Despesas logísticas;1
 80;TARIFA|JUROS|\mIOF\M|ANUIDADE|COBRAN;Tarifas e encargos bancários;Despesas financeiras;1
 85;CONTAB|SISTEMA|HONOR|ADVOG|CONSULT;Serviços administrativos (contador, sistemas);Despesas administrativas;1

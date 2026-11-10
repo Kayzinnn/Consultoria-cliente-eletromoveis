@@ -53,7 +53,7 @@ python atualizar_financeiro.py   # planilhas; recarrega só a que mudou
 criar_banco.py, processa_vendas.py, atualizar_financeiro.py   # comandos
 src\        extratores (PDF/Excel), vínculo item x venda, carregadores
 sql\        00_migracao_multiloja, 01_schema (vendas), 02_views (vendas), 03_financeiro, 04_fato_principal
-config\     regras_categoria.csv (produtos), regras_conta_caixa.csv (plano de contas das saídas), mapa_entradas_caixa.csv
+config\     regras_categoria.csv (produtos), categoria_origem.csv e custo_estimado.csv (Ortobom), regras_conta_caixa.csv (plano de contas das saídas), mapa_entradas_caixa.csv
 entrada\    arquivos do cliente (fora do Git)
 saida\      CSVs intermediários (fora do Git)
 ```
@@ -79,5 +79,13 @@ saida\      CSVs intermediários (fora do Git)
 - As saídas do caixa são classificadas por `config\regras_conta_caixa.csv` (regex, menor prioridade vence). Fornecedor de mercadoria, empréstimo, investimento, gasto pessoal e transferência ficam **fora da DRE**, porque o CMV vem do ERP.
 - A DRE só fecha quando **todas as lojas** tiverem receita carregada (ERP de cada loja + sistema das lojas Ortobom).
 
-**Novas fontes de venda (ex.: lojas Ortobom, outro sistema)**
+**Lojas Ortobom (outro sistema)**
+- Vendas: em `entrada\vendas\ORTOBOM\`, para cada filial, salve o **"Relatório de venda de produtos (por data)"** e o **"Relatório de produtos com margem de lucro"** do mesmo período. Os dois formam par pela filial e pelo Início/Fim do cabeçalho (o nome do arquivo não importa). A loja vira `ORTOBOM GRAÇA`, `ORTOBOM MUCAMBO`, `ORTOBOM CARNAUBAL`. Rode `python processa_vendas.py --loja ORTOBOM`; cada par substitui o próprio período daquela filial.
+- O custo de cada venda = quantidade × custo unitário do produto no relatório de margem. Produto sem custo lá entra com custo 0 (`custo_informado = false`) ou pelo `config\custo_estimado.csv`.
+- Os códigos de produto ganham o prefixo `ORT` (não colidem com o ERP). A categoria vem do próprio relatório e é traduzida por `config\categoria_origem.csv`.
+- Caixa: a `2026- PLAN GERAL EZM COLCHOES ORTOBOM.xlsx` entra pelo `CAIXA_ARQUIVOS` do `.env` (o curinga `*PLAN GERAL*.xlsx` já pega). Tudo que vem de arquivo com "ORTOBOM" no nome ganha `negocio = ORTOBOM` e loja `ORTOBOM <LOJA>`.
+- Aba de mês com datas de outro mês (ex.: NOVEMBRO copiada de outubro) é **ignorada com aviso**, em vez de travar a carga.
+- `vw_fato_principal` tem a coluna `negocio` (ELETROMÓVEIS | ORTOBOM), que serve para segmentar no BI.
+
+**Novas fontes de venda (outro sistema)**
 - O formato é diferente, então precisa de um extrator novo em `src\` que gere os mesmos CSVs (`fato_venda`, `fato_venda_item`), com a coluna `loja`. O carregador e o banco não mudam.

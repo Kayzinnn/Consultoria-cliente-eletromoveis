@@ -1,0 +1,35 @@
+prioridade;padrao;negocio;loja
+# De-para das SAÍDAS do caixa para a loja (regex na descrição, sem diferenciar maiúsc./minúsc.).
+# Menor prioridade vence. negocio vazio = vale para as duas planilhas (ELETROMÓVEIS e ORTOBOM).
+# loja com | divide o valor em partes iguais (ex.: GRAÇA|MUCAMBO = 50% cada).
+# Compartilhado = despesa de todas as lojas (fica separada para rateio).
+# Respostas da Veronica em 10/11/2026.
+# --- Ortobom (aluguéis das lojas de colchão, mesmo quando pagos pelo caixa dos eletromóveis)
+10;ALUGUEL (COL|LOJA .*COLCH);;ORTOBOM MUCAMBO
+11;^ALUGUEL$;ORTOBOM;ORTOBOM MUCAMBO
+12;ALUGUEL.*CARNAUBAL;;ORTOBOM CARNAUBAL
+# --- Veículos (eletromóveis)
+20;STRADA;ELETROMÓVEIS;Compartilhado
+21;HILUX;ELETROMÓVEIS;Compartilhado
+22;JEEP;ELETROMÓVEIS;Compartilhado
+23;\mMOTO\M;ELETROMÓVEIS;GRAÇA
+# --- Funcionários Ortobom
+30;MARCOS PA;;ORTOBOM CARNAUBAL
+31;\mMANU\M;;ORTOBOM MUCAMBO
+32;\mSUZI\M;;ORTOBOM MUCAMBO
+33;LUCATONE;;ORTOBOM GRAÇA
+# --- Funcionários eletromóveis
+40;\mJORGE\M;;GRAÇA|MUCAMBO
+41;\mISRAEL\M;;GRAÇA
+42;\mGEORGE\M;;MUCAMBO
+43;\mLEONARDO\M;;GRAÇA
+44;\mDANIEL\M;;GRAÇA
+45;\mMOCINHA\M;;GRAÇA
+46;\mBRUNO\M;;MUCAMBO
+47;\mGEOVANA\M;;GRAÇA
+48;LORRANY|LORRAYNE;;MUCAMBO
+49;\mBRENO\M;;MUCAMBO
+# --- Aluguéis eletromóveis
+60;ALUGUEL JOS[EÉ];;MUCAMBO
+61;ALUGUEL JULIO;;GRAÇA
+62;ESTOQUE;ELETROMÓVEIS;GRAÇA

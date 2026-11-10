@@ -1,0 +1,50 @@
+table Parâmetro
+	lineageTag: 462dba2c-148a-49f1-be82-c44ab405a35c
+
+	column Parâmetro
+		lineageTag: a57c1be7-5f97-41ea-8286-e76426abd123
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parâmetro Pedido'
+
+		relatedColumnDetails
+			groupByColumn: 'Parâmetro Campos'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Campos'
+		isHidden
+		lineageTag: 285cda29-329f-43b6-95d3-ac53c4999705
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parâmetro Pedido'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parâmetro Pedido'
+		isHidden
+		formatString: 0
+		lineageTag: 6d69091e-6dee-4e39-82f1-c839b00b7912
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Parâmetro = calculated
+		mode: import
+		source =
+				{
+				    ("categoria_produto", NAMEOF('financeiro vw_fato_principal'[categoria_produto]), 0),
+				    ("descricao", NAMEOF('financeiro vw_fato_principal'[descricao]), 1),
+				    ("grupo_produto", NAMEOF('financeiro vw_fato_principal'[grupo_produto]), 2),
+				    ("loja", NAMEOF('financeiro vw_fato_principal'[loja]), 3)
+				}
+
+	annotation PBI_Id = fafe872d0f7d427284821763c0e0d6ad
+

@@ -64,6 +64,11 @@
           "type": "Image"
         },
         {
+          "name": "Painel_de_Resultados_DRE_2000x1250.png",
+          "path": "Painel_de_Resultados_DRE_2000x1250.png",
+          "type": "Image"
+        },
+        {
           "name": "Painel_de_Resultados_Vendas_2000x1250.png",
           "path": "Painel_de_Resultados_Vendas_2000x1250.png",
           "type": "Image"

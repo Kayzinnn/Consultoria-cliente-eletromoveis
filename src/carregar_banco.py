@@ -46,6 +46,8 @@ def main():
     vinc = ler_csv(saida / "fato_venda_item_vinculo.csv")
     empresa = ler_csv(saida / "dim_empresa.csv")[0]
     regras = ler_csv(RAIZ / "config" / "regras_categoria.csv")
+    p_orig = RAIZ / "config" / "categoria_origem.csv"
+    cat_origem = {r["categoria_origem"].strip().upper(): r for r in ler_csv(p_orig)} if p_orig.exists() else {}
     cnpj = meta["cnpj"]
     loja = meta.get("loja", "")
     p_ini, p_fim = meta["periodo_produto"]
@@ -59,7 +61,8 @@ def main():
             cur.execute("""INSERT INTO dim_empresa (cnpj, razao_social, uf, inscricao_estadual)
                            VALUES (%s,%s,%s,%s)
                            ON CONFLICT (cnpj) DO UPDATE SET razao_social = EXCLUDED.razao_social,
-                               uf = EXCLUDED.uf, inscricao_estadual = EXCLUDED.inscricao_estadual""",
+                               uf = COALESCE(NULLIF(EXCLUDED.uf, ''), dim_empresa.uf),
+                               inscricao_estadual = COALESCE(NULLIF(EXCLUDED.inscricao_estadual, ''), dim_empresa.inscricao_estadual)""",
                         (cnpj, empresa["razao_social"], empresa["uf"], empresa["inscricao_estadual"]))
 
             execute_values(cur, """INSERT INTO regra_categoria (prefixo, categoria, grupo) VALUES %s
@@ -70,17 +73,29 @@ def main():
             # produtos: mantém categoria_manual/grupo_manual já preenchidos
             prods = {}
             for r in itens:
-                p = prods.setdefault(r["cod_produto"], dict(desc=r["descricao"], ini=r["data_venda"], fim=r["data_venda"]))
+                p = prods.setdefault(r["cod_produto"], dict(desc=r["descricao"], ini=r["data_venda"], fim=r["data_venda"],
+                                                            orig=(r.get("categoria_origem") or "").strip().upper()))
                 if r["data_venda"] >= p["fim"]:
                     p["fim"], p["desc"] = r["data_venda"], r["descricao"]
                 p["ini"] = min(p["ini"], r["data_venda"])
-            execute_values(cur, """INSERT INTO dim_produto (cod_produto, descricao, primeira_venda, ultima_venda) VALUES %s
+            sem_mapa = sorted({v["orig"] for v in prods.values() if v["orig"] and v["orig"] not in cat_origem})
+            if sem_mapa:
+                print(f"Aviso: categoria(s) de origem sem correspondência em config/categoria_origem.csv: {', '.join(sem_mapa)} "
+                      "(ficam 'A classificar')")
+            def cat(v, campo):
+                m = cat_origem.get(v["orig"]); return m[campo] if m else None
+            execute_values(cur, """INSERT INTO dim_produto (cod_produto, descricao, primeira_venda, ultima_venda,
+                                       categoria_origem, categoria_manual, grupo_manual) VALUES %s
                                    ON CONFLICT (cod_produto) DO UPDATE SET
                                        descricao = EXCLUDED.descricao,
+                                       categoria_origem = COALESCE(EXCLUDED.categoria_origem, dim_produto.categoria_origem),
+                                       categoria_manual = COALESCE(dim_produto.categoria_manual, EXCLUDED.categoria_manual),
+                                       grupo_manual = COALESCE(dim_produto.grupo_manual, EXCLUDED.grupo_manual),
                                        primeira_venda = LEAST(dim_produto.primeira_venda, EXCLUDED.primeira_venda),
                                        ultima_venda = GREATEST(dim_produto.ultima_venda, EXCLUDED.ultima_venda),
                                        atualizado_em = now()""",
-                           [(k, v["desc"], v["ini"], v["fim"]) for k, v in prods.items()])
+                           [(k, v["desc"], v["ini"], v["fim"], v["orig"] or None, cat(v, "categoria"), cat(v, "grupo"))
+                            for k, v in prods.items()])
 
             cur.execute("""INSERT INTO controle_carga (cnpj, loja, arquivo_produto, periodo_produto_ini, periodo_produto_fim,
                                 arquivo_venda, periodo_venda_ini, periodo_venda_fim, linhas_item, linhas_venda, total_liquido)
@@ -96,10 +111,10 @@ def main():
             n_del_v = cur.rowcount
 
             execute_values(cur, """INSERT INTO fato_venda_item (cnpj, loja, data_venda, seq_dia, cod_produto, descricao_original, qtd,
-                                       vr_bruto, vr_desc_acres, vr_liquido, vr_custo, vr_lucro,
+                                       vr_bruto, vr_desc_acres, vr_liquido, vr_custo, vr_lucro, custo_informado,
                                        arquivo_origem, pagina, id_carga) VALUES %s""",
                            [(cnpj, loja, r["data_venda"], r["seq_dia"], r["cod_produto"], r["descricao"], r["qtd"], r["vr_bruto"],
-                             r["vr_desc_acres"], r["vr_liquido"], r["vr_custo"], r["vr_lucro"],
+                             r["vr_desc_acres"], r["vr_liquido"], r["vr_custo"], r["vr_lucro"], r.get("custo_informado", "1") != "0",
                              r["arquivo_origem"], r["pagina"], id_carga) for r in itens], page_size=1000)
             execute_values(cur, """INSERT INTO fato_venda (cnpj, loja, controle, data_venda, data_hora, tipo, vr_bruto, vr_desc_acres,
                                        vr_liquido, vr_custo, vr_lucro, vr_coluna_extra,
@@ -123,7 +138,7 @@ def main():
         print(f"Carga {id_carga} OK — {meta['razao_social']} ({cnpj}) — loja {loja or '(sem loja)'}")
         print(f"  itens : {len(itens):5d} inseridos ({n_del_i} substituídos) — {p_ini} a {p_fim}")
         print(f"  vendas: {len(vendas):5d} inseridas ({n_del_v} substituídas) — {v_ini} a {v_fim}")
-        print(f"  líquido conferido: R$ {tot_v:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+        print(f"  líquido conferido: R$ {(tot_v if vendas else tot_i):,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
     finally:
         conn.close()
 

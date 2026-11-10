@@ -137,6 +137,14 @@ table 'financeiro vw_fato_principal'
 
 		annotation SummarizationSetBy = Automatic
 
+	column negocio
+		dataType: string
+		lineageTag: e7042b7a-f7d9-46a6-b5d3-948419aded61
+		summarizeBy: none
+		sourceColumn: negocio
+
+		annotation SummarizationSetBy = Automatic
+
 	partition 'financeiro vw_fato_principal' = m
 		mode: import
 		source =

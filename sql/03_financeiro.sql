@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS fato_caixa_lancamento (
     PRIMARY KEY (arquivo, aba, celula)
 );
 CREATE INDEX IF NOT EXISTS ix_caixa_data ON fato_caixa_lancamento (data);
+-- ELETROMÓVEIS | ORTOBOM (pelo nome do arquivo da planilha)
+ALTER TABLE fato_caixa_lancamento ADD COLUMN IF NOT EXISTS negocio text;
 
 -- Caixa diário: saldos do dia ----------------------------------------------------
 CREATE TABLE IF NOT EXISTS fato_caixa_dia (
@@ -82,6 +84,17 @@ CREATE TABLE IF NOT EXISTS fato_caixa_dia (
     saidas_fora_total        numeric(14,2),
     id_carga                 int REFERENCES controle_carga
 );
+-- várias planilhas de caixa (eletromóveis, Ortobom): a mesma data aparece uma vez por arquivo
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_constraint c JOIN pg_class t ON t.oid = c.conrelid
+               JOIN pg_namespace n ON n.oid = t.relnamespace
+               WHERE n.nspname = 'financeiro' AND t.relname = 'fato_caixa_dia' AND c.contype = 'p'
+                 AND array_length(c.conkey, 1) = 1) THEN
+        ALTER TABLE financeiro.fato_caixa_dia DROP CONSTRAINT fato_caixa_dia_pkey;
+        ALTER TABLE financeiro.fato_caixa_dia ADD PRIMARY KEY (arquivo, data);
+    END IF;
+END $$;
 
 -- Views para o BI ------------------------------------------------------------------
 CREATE OR REPLACE VIEW vw_conta_pagar AS
@@ -94,18 +107,20 @@ SELECT c.*,
             ELSE 'A vencer' END                      AS situacao
 FROM fato_conta_pagar c;
 
+DROP VIEW IF EXISTS vw_caixa_lancamento;   -- l.* ganhou colunas novas
 CREATE OR REPLACE VIEW vw_caixa_lancamento AS
 SELECT l.*, date_trunc('month', l.data)::date AS mes,
        (l.tipo = 'SAIDA' AND l.descricao ~* '(PESSOAL|\mCASA\M|\mCPF\M)') AS possivel_pessoal
 FROM fato_caixa_lancamento l;
 
+DROP VIEW IF EXISTS vw_caixa_alertas;
 CREATE OR REPLACE VIEW vw_caixa_alertas AS
-SELECT data, 'Saldo inicial diferente do saldo final do dia anterior' AS alerta, diferenca_abertura AS valor
+SELECT data, arquivo, 'Saldo inicial diferente do saldo final do dia anterior' AS alerta, diferenca_abertura AS valor
   FROM fato_caixa_dia WHERE diferenca_abertura <> 0
 UNION ALL
-SELECT data, 'Saldo final da planilha diferente do recalculado (fórmula)', saldo_final - saldo_final_recalculado
+SELECT data, arquivo, 'Saldo final da planilha diferente do recalculado (fórmula)', saldo_final - saldo_final_recalculado
   FROM fato_caixa_dia WHERE saldo_final <> saldo_final_recalculado
 UNION ALL
-SELECT data, 'Entradas listadas que a fórmula de total não soma', entradas_fora_total
+SELECT data, arquivo, 'Entradas listadas que a fórmula de total não soma', entradas_fora_total
   FROM fato_caixa_dia WHERE entradas_fora_total <> 0
-ORDER BY data, alerta;
+ORDER BY arquivo, data, alerta;
