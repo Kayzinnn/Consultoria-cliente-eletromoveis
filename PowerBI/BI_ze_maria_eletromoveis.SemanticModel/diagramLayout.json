@@ -59,6 +59,45 @@
             "width": 234
           },
           "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1020.3830500146938,
+            "y": 72
+          },
+          "nodeIndex": "_Medidas",
+          "nodeLineageTag": "f4ec8296-a452-4408-a59e-f797607e3fa2",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1304.3830500146937,
+            "y": 134
+          },
+          "nodeIndex": "d_DRE",
+          "nodeLineageTag": "32357446-f140-4d76-b5bf-b33f2d5b68d7",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1588.3830500146937,
+            "y": 146
+          },
+          "nodeIndex": "Parâmetro",
+          "nodeLineageTag": "462dba2c-148a-49f1-be82-c44ab405a35c",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "Todas as tabelas",
