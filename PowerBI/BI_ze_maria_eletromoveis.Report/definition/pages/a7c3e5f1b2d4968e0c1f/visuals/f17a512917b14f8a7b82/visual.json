@@ -81,13 +81,6 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'Geral'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
                                 "Value": "'GRAÇA'"
                               }
                             }
@@ -102,7 +95,35 @@
                           [
                             {
                               "Literal": {
+                                "Value": "'ORTOBOM CARNAUBAL'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'ORTOBOM GRAÇA'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Geral'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
                                 "Value": "'Compartilhado'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'ORTOBOM MUCAMBO'"
                               }
                             }
                           ]

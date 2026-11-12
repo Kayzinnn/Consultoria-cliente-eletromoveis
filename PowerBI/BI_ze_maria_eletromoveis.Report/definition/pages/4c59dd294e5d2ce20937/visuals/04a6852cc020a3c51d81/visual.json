@@ -3,9 +3,9 @@
   "name": "04a6852cc020a3c51d81",
   "position": {
     "x": 171.42857142857144,
-    "y": 394.28571428571433,
+    "y": 420,
     "z": 9000,
-    "height": 800,
+    "height": 560,
     "width": 1760,
     "tabOrder": 9000
   },
@@ -27,57 +27,9 @@
                 }
               },
               "queryRef": "financeiro vw_fato_principal.loja",
-              "nativeQueryRef": "loja",
+              "nativeQueryRef": "Loja",
               "active": true,
-              "displayName": "loja"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "financeiro vw_fato_principal"
-                    }
-                  },
-                  "Property": "categoria_produto"
-                }
-              },
-              "queryRef": "financeiro vw_fato_principal.categoria_produto",
-              "nativeQueryRef": "categoria_produto",
-              "active": true,
-              "displayName": "categoria_produto"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "financeiro vw_fato_principal"
-                    }
-                  },
-                  "Property": "descricao"
-                }
-              },
-              "queryRef": "financeiro vw_fato_principal.descricao",
-              "nativeQueryRef": "descricao",
-              "active": false,
-              "displayName": "descricao"
-            }
-          ],
-          "fieldParameters": [
-            {
-              "parameterExpr": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Parâmetro"
-                    }
-                  },
-                  "Property": "Parâmetro"
-                }
-              },
-              "index": 0,
-              "length": 3
+              "displayName": "Loja"
             }
           ]
         },
@@ -91,12 +43,12 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Qtd Vendida Acum"
+                  "Property": "Meta do Mês"
                 }
               },
-              "queryRef": "_Medidas.Qtd Vendida Acum",
-              "nativeQueryRef": "Qtd",
-              "displayName": "Qtd"
+              "queryRef": "_Medidas.Meta do Mês",
+              "nativeQueryRef": "Meta mensal",
+              "displayName": "Meta mensal"
             },
             {
               "field": {
@@ -106,12 +58,12 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Preço Médio Acum"
+                  "Property": "Vendido no Mês"
                 }
               },
-              "queryRef": "_Medidas.Preço Médio Acum",
-              "nativeQueryRef": "Preço médio",
-              "displayName": "Preço médio"
+              "queryRef": "_Medidas.Vendido no Mês",
+              "nativeQueryRef": "Vendido até ontem",
+              "displayName": "Vendido até ontem"
             },
             {
               "field": {
@@ -121,12 +73,12 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Receita Bruta Acum"
+                  "Property": "Ritmo Projetado"
                 }
               },
-              "queryRef": "_Medidas.Receita Bruta Acum",
-              "nativeQueryRef": "Faturamento",
-              "displayName": "Faturamento"
+              "queryRef": "_Medidas.Ritmo Projetado",
+              "nativeQueryRef": "Ritmo projetado",
+              "displayName": "Ritmo projetado"
             },
             {
               "field": {
@@ -136,117 +88,12 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Descontos Acum"
+                  "Property": "Desvio Texto"
                 }
               },
-              "queryRef": "_Medidas.Descontos Acum",
-              "nativeQueryRef": "Desconto",
-              "displayName": "Desconto"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Vendas Acum"
-                }
-              },
-              "queryRef": "_Medidas.Vendas Acum",
-              "nativeQueryRef": "Vendas c. Desc",
-              "displayName": "Vendas c. Desc"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Participação nas Vendas %"
-                }
-              },
-              "queryRef": "_Medidas.Participação nas Vendas %",
-              "nativeQueryRef": "Part. %",
-              "displayName": "Part. %"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "CMV Produtos Acum"
-                }
-              },
-              "queryRef": "_Medidas.CMV Produtos Acum",
-              "nativeQueryRef": "Custo (CMV)",
-              "displayName": "Custo (CMV)"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Lucro Bruto Produtos Acum"
-                }
-              },
-              "queryRef": "_Medidas.Lucro Bruto Produtos Acum",
-              "nativeQueryRef": "Ganho na venda",
-              "displayName": "Ganho na venda"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Margem Bruta Produtos Acum %"
-                }
-              },
-              "queryRef": "_Medidas.Margem Bruta Produtos Acum %",
-              "nativeQueryRef": "Ganho %",
-              "displayName": "Ganho %"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Vendas Var % Ano Anterior"
-                }
-              },
-              "queryRef": "_Medidas.Vendas Var % Ano Anterior",
-              "nativeQueryRef": "Var. % ano ant.",
-              "displayName": "Var. % ano ant."
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Última Venda"
-                }
-              },
-              "queryRef": "_Medidas.Última Venda",
-              "nativeQueryRef": "Última venda",
-              "displayName": "Última venda"
+              "queryRef": "_Medidas.Desvio Texto",
+              "nativeQueryRef": "Desvio (ritmo − meta)",
+              "displayName": "Desvio (ritmo − meta)"
             }
           ]
         }
@@ -261,7 +108,7 @@
                     "Entity": "_Medidas"
                   }
                 },
-                "Property": "Vendas Var % Ano Anterior"
+                "Property": "Meta do Mês"
               }
             },
             "direction": "Descending"
@@ -269,74 +116,6 @@
         ]
       }
     },
-    "expansionStates": [
-      {
-        "roles": [
-          "Rows"
-        ],
-        "levels": [
-          {
-            "queryRefs": [
-              "financeiro vw_fato_principal.loja"
-            ],
-            "isCollapsed": true,
-            "identityKeys": [
-              {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "financeiro vw_fato_principal"
-                    }
-                  },
-                  "Property": "loja"
-                }
-              }
-            ],
-            "isPinned": true
-          },
-          {
-            "queryRefs": [
-              "financeiro vw_fato_principal.categoria_produto"
-            ],
-            "isCollapsed": true,
-            "identityKeys": [
-              {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "financeiro vw_fato_principal"
-                    }
-                  },
-                  "Property": "categoria_produto"
-                }
-              }
-            ],
-            "isPinned": true
-          },
-          {
-            "queryRefs": [
-              "financeiro vw_fato_principal.descricao"
-            ],
-            "isCollapsed": true,
-            "isPinned": true
-          }
-        ],
-        "root": {
-          "children": [
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'MUCAMBO'"
-                  }
-                }
-              ],
-              "isToggled": true
-            }
-          ]
-        }
-      }
-    ],
     "objects": {
       "grid": [
         {
@@ -369,14 +148,14 @@
             "rowPadding": {
               "expr": {
                 "Literal": {
-                  "Value": "5D"
+                  "Value": "10D"
                 }
               }
             },
             "textSize": {
               "expr": {
                 "Literal": {
-                  "Value": "11D"
+                  "Value": "16D"
                 }
               }
             },
@@ -463,7 +242,14 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "18D"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
                 }
               }
             }
@@ -505,14 +291,21 @@
             "showExpandCollapseButtons": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "18D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI Semibold'"
                 }
               }
             }
@@ -569,7 +362,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "18D"
                 }
               }
             }
@@ -577,6 +370,22 @@
         },
         {
           "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Medidas"
+                        }
+                      },
+                      "Property": "Cor Fundo Ritmo"
+                    }
+                  }
+                }
+              }
+            },
             "fontColor": {
               "solid": {
                 "color": {
@@ -587,7 +396,7 @@
                           "Entity": "_Medidas"
                         }
                       },
-                      "Property": "Cor Var % Ano Anterior"
+                      "Property": "Cor Fonte Ritmo"
                     }
                   }
                 }
@@ -602,7 +411,53 @@
                 }
               }
             ],
-            "metadata": "_Medidas.Vendas Var % Ano Anterior"
+            "metadata": "_Medidas.Ritmo Projetado"
+          }
+        },
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Medidas"
+                        }
+                      },
+                      "Property": "Cor Fundo Ritmo"
+                    }
+                  }
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Medidas"
+                        }
+                      },
+                      "Property": "Cor Fonte Ritmo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Medidas.Desvio Texto"
           }
         }
       ],
@@ -634,7 +489,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#111827'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -645,7 +500,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FFFFFF'"
+                      "Value": "'#1B2440'"
                     }
                   }
                 }
@@ -655,6 +510,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'Segoe UI Bold'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "18D"
                 }
               }
             }
@@ -667,13 +529,13 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "465D"
+                  "Value": "404.99999818347726D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "financeiro vw_fato_principal.categoria_produto"
+            "metadata": "financeiro vw_fato_principal.loja"
           }
         },
         {
@@ -681,13 +543,55 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "452.6923076923077D"
+                  "Value": "330D"
                 }
               }
             }
           },
           "selector": {
-            "metadata": "financeiro vw_fato_principal.loja"
+            "metadata": "_Medidas.Meta do Mês"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "330D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Vendido no Mês"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "330D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Ritmo Projetado"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "330D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Desvio Texto"
           }
         }
       ]

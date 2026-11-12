@@ -592,6 +592,62 @@ table _Medidas
 		displayFolder: 11 DRE
 		lineageTag: 6cff2e56-056e-4c9a-b7fa-769798e40004
 
+	/// Meta de venda líquida do mês da data de referência (config/metas_vendas.csv).
+	measure 'Meta do Mês' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[origem] = "Meta de vendas", DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), MONTH(_ref), 1), EOMONTH(_ref, 0)), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 12 Metas
+		lineageTag: 60ac9ddd-40a0-426b-99ff-e1e3c63f1a86
+
+	/// Venda líquida do dia 1º do mês até a data de referência (último dia com venda carregada).
+	measure 'Vendido no Mês' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Líquida], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), MONTH(_ref), 1), _ref), REMOVEFILTERS(d_Calendario)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 12 Metas
+		lineageTag: b37a8a23-a7fd-41fc-bb79-32df170696fc
+
+	/// Projeção do mês no ritmo atual: vendido ÷ dias decorridos × dias do mês.
+	measure 'Ritmo Projetado' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK([Meta do Mês]), DIVIDE([Vendido no Mês], DAY(_ref)) * DAY(EOMONTH(_ref, 0)))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 12 Metas
+		lineageTag: 5df89b73-39f2-4c62-9a65-9bce07e82ad1
+
+	/// Ritmo projetado menos a meta (negativo = abaixo do ritmo da meta).
+	measure 'Desvio do Ritmo' = IF(NOT ISBLANK([Meta do Mês]), [Ritmo Projetado] - [Meta do Mês])
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 12 Metas
+		lineageTag: a7d0e12f-84d3-4574-9d1a-3e92e5481194
+
+	/// Desvio do ritmo sobre a meta.
+	measure 'Desvio do Ritmo %' = DIVIDE([Desvio do Ritmo], [Meta do Mês])
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 12 Metas
+		lineageTag: e88b5543-3658-4212-a1ca-072fe636298d
+
+	/// Desvio em R$ e % para a tabela: - R$ 1.264 (-0,9%).
+	measure 'Desvio Texto' = VAR _d = [Desvio do Ritmo] RETURN IF(NOT ISBLANK(_d), IF(_d >= 0, "+ R$ ", "- R$ ") & FORMAT(ABS(_d), "#,##0") & "  (" & FORMAT([Desvio do Ritmo %], "+0.0%;-0.0%") & ")")
+		displayFolder: 12 Metas
+		lineageTag: aa463bd2-e50d-4d48-9637-0ad8a67e652d
+
+	/// Quanto da meta do mês já foi vendido.
+	measure 'Meta Atingida %' = DIVIDE([Vendido no Mês], [Meta do Mês])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 12 Metas
+		lineageTag: 20487e39-c169-4610-8bd7-41eafbac2293
+
+	/// Fundo verde quando o ritmo bate a meta, vermelho quando está abaixo.
+	measure 'Cor Fundo Ritmo' = IF(NOT ISBLANK([Meta do Mês]), IF([Ritmo Projetado] >= [Meta do Mês], "#DCFCE7", "#FEE2E2"))
+		displayFolder: 12 Metas
+		lineageTag: c9de5423-b277-414d-a1cf-e318d08cd530
+
+	/// Fonte verde quando o ritmo bate a meta, vermelha quando está abaixo.
+	measure 'Cor Fonte Ritmo' = IF(NOT ISBLANK([Meta do Mês]), IF([Ritmo Projetado] >= [Meta do Mês], "#15803D", "#B91C1C"))
+		displayFolder: 12 Metas
+		lineageTag: da55e4a9-1b88-464d-ac92-809c8905afd9
+
+	/// Texto: Vendas realizadas até dd/mm | Projeção para N dias.
+	measure 'Ritmo Subtítulo' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), "Vendas realizadas até " & FORMAT(_ref, "dd/mm") & "  |  Projeção para " & DAY(EOMONTH(_ref, 0)) & " dias")
+		displayFolder: 12 Metas
+		lineageTag: 4d3cfadf-6fb3-4449-a5ea-eff4def7de56
+
 	column _
 		isHidden
 		lineageTag: abd16786-a1ad-4b4b-b40d-cd65da3dd140
