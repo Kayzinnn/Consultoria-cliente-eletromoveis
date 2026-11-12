@@ -22,6 +22,8 @@ _Atualizado em 10/11/2026_
 
 - [x] Extrator das vendas Ortobom (`src\extrair_vendas_ortobom.py`) e caixa Ortobom no `atualizar_financeiro.py`.
 - [x] Ortobom: vendas por dia + custo (relatórios por data e margem de lucro, por filial) carregados — jan–out/2026.
+- [x] Ortobom automático: `baixa_vendas.py` puxa vendas + custo direto do RP Sistema (API), substituindo os PDFs.
+- [ ] Agendar `baixa_vendas.py` no Agendador de Tarefas do Windows (diário).
 - [ ] Ortobom: o sistema só tem vendas a partir de 25/08/2026? Confirmar com a Veronica de onde vêm as vendas de antes (o caixa da Ortobom tem recebimentos desde dez/2025).
 - [ ] **Ortobom: CNPJ** da EZM Colchões (hoje entra como "ORTOBOM SEM CNPJ"; dá para passar `--cnpj`).
 - [ ] **PLAN GERAL Ortobom, aba NOVEMBRO:** está com as datas de 02/10 a 01/11 (cópia de outubro). Corrigir; até lá a aba é ignorada (15 lançamentos, R$ 17 mil).

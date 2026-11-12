@@ -18,3 +18,6 @@ venv/
 # Power BI: cache com os dados importados e configurações locais (nunca versionar)
 **/.pbi/cache.abf
 **/.pbi/localSettings.json
+
+# Logs do baixa_vendas.py
+logs/
