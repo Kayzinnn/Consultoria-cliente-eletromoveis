@@ -50,6 +50,21 @@
               "nativeQueryRef": "Demonstrativo",
               "active": true,
               "displayName": "Demonstrativo"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "financeiro vw_fato_principal"
+                    }
+                  },
+                  "Property": "loja"
+                }
+              },
+              "queryRef": "financeiro vw_fato_principal.loja",
+              "nativeQueryRef": "loja",
+              "active": true
             }
           ]
         },
@@ -87,6 +102,19 @@
               }
             },
             "direction": "Ascending"
+          },
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "financeiro vw_fato_principal"
+                  }
+                },
+                "Property": "loja"
+              }
+            },
+            "direction": "Ascending"
           }
         ]
       }
@@ -114,6 +142,13 @@
               }
             ],
             "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "financeiro vw_fato_principal.loja"
+            ],
+            "isCollapsed": true,
+            "isPinned": true
           }
         ],
         "root": {
@@ -133,16 +168,6 @@
                 {
                   "Literal": {
                     "Value": "'(-) Despesas a classificar'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'(-) Despesas administrativas'"
                   }
                 }
               ],
@@ -222,7 +247,17 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(±) Descontos e acréscimos'"
+                    "Value": "'(=) RECEITA LÍQUIDA'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Custo da mercadoria vendida'"
                   }
                 }
               ],
@@ -383,8 +418,9 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
                     }
                   }
                 }
@@ -467,6 +503,13 @@
                   "Value": "14D"
                 }
               }
+            },
+            "bandedRowHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
             }
           }
         },
@@ -517,7 +560,73 @@
                   "Value": "true"
                 }
               }
+            },
+            "perRowLevel": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "perColumnLevel": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
             }
+          }
+        },
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.1
+                    }
+                  }
+                }
+              }
+            },
+            "applyToHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "Row"
+          }
+        },
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "applyToHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "Column"
           }
         }
       ],
@@ -562,13 +671,63 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "1280.2002377060003D"
+                  "Value": "1006.9059124448994D"
                 }
               }
             }
           },
           "selector": {
             "metadata": "d_DRE.Linha"
+          }
+        }
+      ],
+      "rowTotal": [
+        {
+          "properties": {
+            "applyToHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnTotal": [
+        {
+          "properties": {
+            "applyToHeaders": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       ]

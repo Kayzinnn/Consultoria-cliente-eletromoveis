@@ -529,7 +529,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "404.99999818347726D"
+                  "Value": "526.8637376471222D"
                 }
               }
             }
@@ -543,7 +543,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "330D"
+                  "Value": "274.2857142857143D"
                 }
               }
             }
@@ -585,7 +585,93 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "330D"
+                  "Value": "266.6666666666667D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Desvio Texto"
+          }
+        }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            },
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Meta do Mês"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            },
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Vendido no Mês"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            },
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Ritmo Projetado"
+          }
+        },
+        {
+          "properties": {
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
                 }
               }
             }
