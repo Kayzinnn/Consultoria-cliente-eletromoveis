@@ -27,6 +27,24 @@ table 'financeiro dim_grupo_dre'
 
 		annotation SummarizationSetBy = Automatic
 
+	column agrupamento
+		dataType: string
+		lineageTag: 9d0079bb-2a65-48e2-a14a-bab6e6c58129
+		summarizeBy: none
+		sourceColumn: agrupamento
+		sortByColumn: ordem_agrupamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordem_agrupamento
+		dataType: int64
+		formatString: 0
+		lineageTag: e8413e3f-ceef-44c8-8215-942ae31ca82d
+		summarizeBy: none
+		sourceColumn: ordem_agrupamento
+
+		annotation SummarizationSetBy = Automatic
+
 	partition 'financeiro dim_grupo_dre' = m
 		mode: import
 		source =

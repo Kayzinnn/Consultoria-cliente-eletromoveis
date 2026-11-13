@@ -575,20 +575,20 @@ table _Medidas
 		lineageTag: 6c48c462-d8aa-40e4-acdd-0a11242da145
 
 	/// Valor de cada linha da DRE: grupos somam a fato; linhas (=) são subtotais; margens em %.
-	measure 'DRE Valor' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _grupo = SELECTEDVALUE(d_DRE[Grupo]) RETURN SWITCH(_tipo, "grupo", CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = _grupo, 'financeiro vw_fato_principal'[entra_no_dre] = TRUE()), "receita_liquida", [Receita Líquida], "lucro_bruto", [Lucro Bruto], "margem_bruta", [Margem Bruta %], "despesas", [Despesas Operacionais], "resultado", [Resultado], "margem_liquida", [Margem Líquida %])
+	measure 'DRE Valor' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _grupo = SELECTEDVALUE(d_DRE[Grupo]) VAR _desp_op = CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[natureza] = "Despesa", NOT 'financeiro vw_fato_principal'[grupo_dre] IN {"Pró-labore", "Impostos", "Despesas financeiras"}) VAR _res_op = [Lucro Bruto] + _desp_op RETURN SWITCH(_tipo, "grupo", CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[grupo_dre] = _grupo, 'financeiro vw_fato_principal'[entra_no_dre] = TRUE()), "receita_liquida", [Receita Líquida], "lucro_bruto", [Lucro Bruto], "margem_bruta", [Margem Bruta %], "despesas_op", _desp_op, "resultado_op", _res_op, "margem_operacional", DIVIDE(_res_op, [Receita Líquida]), "despesas", [Despesas Operacionais], "resultado", [Resultado], "margem_liquida", [Margem Líquida %])
 		displayFolder: 11 DRE
 		lineageTag: 974b1491-3fb6-48f2-91b3-efdb5a53b425
 
-		formatStringDefinition = IF(SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_liquida"}, "0.0%;-0.0%;0.0%", "\R$ #,##0;-\R$ #,##0;\R$ #,##0")
+		formatStringDefinition = IF(SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_operacional", "margem_liquida"}, "0.0%;-0.0%;0.0%", "\R$ #,##0;-\R$ #,##0;\R$ #,##0")
 
 	/// % de cada linha sobre a receita líquida (análise vertical).
-	measure 'DRE % Receita' = IF(NOT SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_liquida"}, DIVIDE([DRE Valor], [Receita Líquida]))
+	measure 'DRE % Receita' = IF(NOT SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_operacional", "margem_liquida"}, DIVIDE([DRE Valor], [Receita Líquida]))
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 11 DRE
 		lineageTag: a20d3652-fbca-41a2-b7ae-3db43c33ef7a
 
 	/// Cor da fonte na DRE: subtotais em azul-marinho, resultado verde/vermelho, margens em cinza.
-	measure 'Cor DRE' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _v = [DRE Valor] RETURN SWITCH(TRUE(), _tipo IN {"resultado", "margem_liquida"} && _v < 0, "#B91C1C", _tipo = "resultado", "#15803D", _tipo IN {"receita_liquida", "lucro_bruto", "despesas"}, "#1B2440", _tipo IN {"margem_bruta", "margem_liquida"}, "#6B7280", "#111827")
+	measure 'Cor DRE' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _v = [DRE Valor] RETURN SWITCH(TRUE(), _tipo IN {"resultado", "resultado_op", "margem_operacional", "margem_liquida"} && _v < 0, "#B91C1C", _tipo IN {"resultado", "resultado_op"}, "#15803D", _tipo IN {"receita_liquida", "lucro_bruto", "despesas", "despesas_op"}, "#1B2440", _tipo IN {"margem_bruta", "margem_operacional", "margem_liquida"}, "#6B7280", "#111827")
 		displayFolder: 11 DRE
 		lineageTag: 6cff2e56-056e-4c9a-b7fa-769798e40004
 
@@ -647,6 +647,56 @@ table _Medidas
 	measure 'Ritmo Subtítulo' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), "Vendas realizadas até " & FORMAT(_ref, "dd/mm") & "  |  Projeção para " & DAY(EOMONTH(_ref, 0)) & " dias")
 		displayFolder: 12 Metas
 		lineageTag: 4d3cfadf-6fb3-4449-a5ea-eff4def7de56
+
+	/// Orçamento (financeiro.orcamento) até a data de referência, respeitando o filtro de loja.
+	measure 'Orçado Base' = VAR _ref = [Data de Referência] VAR _tot = CALCULATE(SUM('financeiro vw_orcamento_dia'[valor]), 'financeiro vw_orcamento_dia'[data] <= _ref) RETURN IF(ISBLANK(_ref), BLANK(), IF(ISFILTERED('financeiro vw_fato_principal'[loja]), CALCULATE(SUM('financeiro vw_orcamento_dia'[valor]), 'financeiro vw_orcamento_dia'[data] <= _ref, TREATAS(VALUES('financeiro vw_fato_principal'[loja]), 'financeiro vw_orcamento_dia'[loja])), _tot))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 13 Orçamento
+		lineageTag: 2ca8ed23-3b20-450c-a2a5-5040e8e443ff
+
+	/// Orçado de cada linha da DRE (mesma estrutura da DRE Valor).
+	measure 'DRE Orçado' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _grupo = SELECTEDVALUE(d_DRE[Grupo]) VAR _rl = CALCULATE([Orçado Base], 'financeiro vw_orcamento_dia'[natureza] = "Receita") VAR _lb = CALCULATE([Orçado Base], 'financeiro vw_orcamento_dia'[natureza] IN {"Receita", "Custo"}) VAR _desp_op = CALCULATE([Orçado Base], 'financeiro vw_orcamento_dia'[natureza] = "Despesa", NOT 'financeiro vw_orcamento_dia'[grupo_dre] IN {"Pró-labore", "Impostos", "Despesas financeiras"}) RETURN SWITCH(_tipo, "grupo", CALCULATE([Orçado Base], 'financeiro vw_orcamento_dia'[grupo_dre] = _grupo), "receita_liquida", _rl, "lucro_bruto", _lb, "margem_bruta", DIVIDE(_lb, _rl), "despesas_op", _desp_op, "resultado_op", _lb + _desp_op, "margem_operacional", DIVIDE(_lb + _desp_op, _rl), "despesas", CALCULATE([Orçado Base], 'financeiro vw_orcamento_dia'[natureza] = "Despesa"), "resultado", [Orçado Base], "margem_liquida", DIVIDE([Orçado Base], _rl))
+		displayFolder: 13 Orçamento
+		lineageTag: ca8bb673-7276-4550-b02f-185e4ca46224
+
+		formatStringDefinition = IF(SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_operacional", "margem_liquida"}, "0.0%;-0.0%;0.0%", "\R$ #,##0;-\R$ #,##0;\R$ #,##0")
+
+	/// Real menos orçado. Custo e despesa são negativos, então positivo = favorável em todas as linhas.
+	measure 'DRE Desvio' = IF(NOT ISBLANK([DRE Orçado]), [DRE Valor] - [DRE Orçado])
+		displayFolder: 13 Orçamento
+		lineageTag: 626d841c-4d51-4705-b180-df2758ba78f6
+
+		formatStringDefinition = IF(SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_operacional", "margem_liquida"}, "0.0%;-0.0%;0.0%", "\R$ #,##0;-\R$ #,##0;\R$ #,##0")
+
+	/// Desvio sobre o orçado em valor absoluto. Nas margens fica em branco: o desvio já está em pontos percentuais.
+	measure 'DRE Desvio %' = IF(NOT SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_operacional", "margem_liquida"}, DIVIDE([DRE Desvio], ABS([DRE Orçado])))
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 13 Orçamento
+		lineageTag: 7e03bb06-4890-487f-840a-7e910d451f48
+
+	/// Verde quando o desvio é favorável, vermelho quando é desfavorável.
+	measure 'Cor Desvio DRE' = VAR _d = [DRE Desvio] RETURN IF(ISBLANK(_d), BLANK(), IF(_d >= 0, "#15803D", "#B91C1C"))
+		displayFolder: 13 Orçamento
+		lineageTag: a01fefda-128c-45f0-966d-58d04e39ec95
+
+	measure 'Título Meta' =
+			
+			VAR _ref = [Data de Referência]
+			VAR _meses = DISTINCTCOUNT ( d_Calendario[Mês Nome] )
+			VAR _anos = DISTINCTCOUNT ( d_Calendario[Ano] )
+			VAR _mes =
+			    IF (
+			        _meses = 1 && _anos = 1,
+			        FORMAT ( _ref, "mmmm" ),                       -- novembro
+			        "o período selecionado"
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _ref ),
+			        "Sem vendas no período selecionado",
+			        "O que aconteceu em " & _mes & " comparado com a meta"
+			    )
+		lineageTag: 1c539264-307c-4eeb-9acd-529bec7ee9c6
 
 	column _
 		isHidden

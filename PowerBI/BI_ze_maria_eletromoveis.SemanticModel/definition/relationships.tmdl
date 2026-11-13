@@ -30,3 +30,7 @@ relationship 0cd1b651-0ccb-2833-c409-13accc2e469d
 	fromColumn: 'financeiro vw_fato_principal'.data
 	toColumn: d_Calendario.Date
 
+relationship e64ae992-d238-4b03-8d58-8a5cadf1ad4d
+	fromColumn: 'financeiro vw_orcamento_dia'.data
+	toColumn: d_Calendario.Date
+

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "e2fe08ad57464bcaa8ee",
   "position": {
-    "x": 172,
-    "y": 348,
-    "z": 3000,
-    "height": 846,
+    "x": 172.22222222222223,
+    "y": 377.77777777777777,
+    "z": 0,
+    "height": 816.66666666666663,
     "width": 1760,
-    "tabOrder": 3000
+    "tabOrder": 0
   },
   "visual": {
     "visualType": "pivotTable",
@@ -82,8 +82,24 @@
                 }
               },
               "queryRef": "_Medidas.DRE Valor",
-              "nativeQueryRef": "Valor",
-              "displayName": "Valor"
+              "nativeQueryRef": "Realizado",
+              "displayName": "Realizado"
+            }
+          ],
+          "fieldParameters": [
+            {
+              "parameterExpr": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão DRE"
+                    }
+                  },
+                  "Property": "Visão DRE"
+                }
+              },
+              "index": 0,
+              "length": 1
             }
           ]
         }
@@ -542,6 +558,96 @@
             ],
             "metadata": "_Medidas.DRE Valor"
           }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Medidas"
+                        }
+                      },
+                      "Property": "Cor DRE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Medidas.DRE Orçado"
+          }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Medidas"
+                        }
+                      },
+                      "Property": "Cor Desvio DRE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Medidas.DRE Desvio"
+          }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Medidas"
+                        }
+                      },
+                      "Property": "Cor Desvio DRE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Medidas.DRE Desvio %"
+          }
         }
       ],
       "subTotals": [
@@ -671,7 +777,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "1006.9059124448994D"
+                  "Value": "1130.252638061374D"
                 }
               }
             }

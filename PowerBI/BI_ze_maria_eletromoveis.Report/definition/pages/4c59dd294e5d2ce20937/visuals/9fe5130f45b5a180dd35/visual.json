@@ -4,9 +4,10 @@
   "position": {
     "x": 1665,
     "y": 346.66666666666669,
-    "z": 17001,
+    "z": 19000,
     "height": 68.333333333333343,
-    "width": 253.33333333333334
+    "width": 253.33333333333334,
+    "tabOrder": 19000
   },
   "visual": {
     "visualType": "pageNavigator",
@@ -38,6 +39,20 @@
           },
           "selector": {
             "id": "c8d1e4f7a2b5d8e1f3a6"
+          }
+        },
+        {
+          "properties": {
+            "showPage": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "24b551905e61ed7d9378"
           }
         }
       ],

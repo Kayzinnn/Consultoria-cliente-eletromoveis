@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "bc615b50f1e04d61e245",
   "position": {
-    "x": 1295,
-    "y": 418,
-    "z": 3100,
-    "height": 328,
-    "width": 640,
-    "tabOrder": 3100
+    "x": 1288.3333333333335,
+    "y": 418.33333333333337,
+    "z": 14000,
+    "height": 328.33333333333337,
+    "width": 655,
+    "tabOrder": 14000
   },
   "visual": {
     "visualType": "waterfallChart",
@@ -23,13 +23,12 @@
                       "Entity": "financeiro dim_grupo_dre"
                     }
                   },
-                  "Property": "grupo_dre"
+                  "Property": "agrupamento"
                 }
               },
-              "queryRef": "financeiro dim_grupo_dre.grupo_dre",
-              "nativeQueryRef": "Linha da DRE",
-              "active": true,
-              "displayName": "Linha da DRE"
+              "queryRef": "financeiro dim_grupo_dre.agrupamento",
+              "nativeQueryRef": "agrupamento",
+              "active": true
             }
           ]
         },
@@ -259,5 +258,39 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "93e3c6698a287d60ce57",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "financeiro dim_grupo_dre"
+              }
+            },
+            "Property": "grupo_dre"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "User",
+        "objects": {
+          "general": [
+            {
+              "properties": {
+                "isInvertedSelectionMode": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "true"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
 }

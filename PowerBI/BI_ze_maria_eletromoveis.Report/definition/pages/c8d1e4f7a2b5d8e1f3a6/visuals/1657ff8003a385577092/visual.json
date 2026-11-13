@@ -4,10 +4,10 @@
   "position": {
     "x": 1734,
     "y": 30,
-    "z": 3007,
+    "z": 7000,
     "height": 66,
     "width": 224,
-    "tabOrder": 3007
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "slicer",
@@ -81,42 +81,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'junho'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'julho'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'agosto'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'setembro'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'outubro'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'maio'"
+                                "Value": "'novembro'"
                               }
                             }
                           ]

@@ -56,6 +56,16 @@ INSERT INTO dim_grupo_dre VALUES
     ('Meta de vendas',                    300, 'Metas')
 ON CONFLICT (grupo_dre) DO UPDATE SET ordem = EXCLUDED.ordem, secao = EXCLUDED.secao;
 
+-- Agrupamento resumido para o BI: as 4 despesas operacionais viram 'Despesas'; o resto mantém o próprio nome.
+ALTER TABLE dim_grupo_dre ADD COLUMN IF NOT EXISTS agrupamento text;
+ALTER TABLE dim_grupo_dre ADD COLUMN IF NOT EXISTS ordem_agrupamento int;
+UPDATE dim_grupo_dre SET agrupamento = CASE WHEN grupo_dre IN ('Despesas administrativas', 'Despesas com pessoal',
+                                                               'Despesas de ocupação', 'Despesas logísticas')
+                                            THEN 'Despesas' ELSE grupo_dre END;
+UPDATE dim_grupo_dre d SET ordem_agrupamento = x.ordem
+FROM (SELECT agrupamento, min(ordem) AS ordem FROM dim_grupo_dre GROUP BY agrupamento) x
+WHERE x.agrupamento = d.agrupamento;
+
 -- Fornecedores de mercadoria: 1ª palavra dos fornecedores pagos por DUPLICATA no contas a pagar
 CREATE OR REPLACE VIEW vw_fornecedor_mercadoria AS
 SELECT DISTINCT upper(split_part(fornecedor, ' ', 1)) AS token

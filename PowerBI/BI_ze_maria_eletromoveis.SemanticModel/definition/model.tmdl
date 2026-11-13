@@ -11,7 +11,7 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["financeiro dim_grupo_dre","financeiro vw_fato_principal","vendas dim_produto"]
+annotation PBI_QueryOrder = ["financeiro dim_grupo_dre","financeiro vw_fato_principal","vendas dim_produto","financeiro vw_orcamento_dia"]
 
 ref table d_Calendario
 ref table DateTableTemplate_6c87bc45-6361-4f43-b7e9-cd4bf287e6e8
@@ -25,6 +25,8 @@ ref table LocalDateTable_2d02cd4c-d88d-4147-b4ba-36941b9ab59e
 ref table _Medidas
 ref table d_DRE
 ref table Parâmetro
+ref table 'financeiro vw_orcamento_dia'
+ref table 'Visão DRE'
 
 ref cultureInfo pt-BR
 

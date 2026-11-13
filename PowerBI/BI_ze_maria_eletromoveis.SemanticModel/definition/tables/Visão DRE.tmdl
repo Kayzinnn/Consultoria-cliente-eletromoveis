@@ -1,0 +1,48 @@
+table 'Visão DRE'
+	lineageTag: a35bd74f-f9f1-4ebc-975b-399d01d4890e
+
+	column 'Visão DRE'
+		lineageTag: 18b845b8-09b0-4c08-a3bd-a816793692aa
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Visão DRE Pedido'
+
+		relatedColumnDetails
+			groupByColumn: 'Visão DRE Campos'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Visão DRE Campos'
+		isHidden
+		lineageTag: 208eb898-920b-4432-bcce-c599c640ce34
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Visão DRE Pedido'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Visão DRE Pedido'
+		isHidden
+		formatString: 0
+		lineageTag: 02c43afd-c605-4a5e-baf4-bcbd1ed12d61
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Visão DRE' = calculated
+		mode: import
+		source =
+				{
+				    ("Realizado", NAMEOF('_Medidas'[DRE Valor]), 0),
+				    ("Meta", NAMEOF('_Medidas'[DRE Orçado]), 1),
+				    ("Desvio x Meta R$", NAMEOF('_Medidas'[DRE Desvio]), 2),
+				    ("Desvio %", NAMEOF('_Medidas'[DRE Desvio %]), 3)
+				}
+

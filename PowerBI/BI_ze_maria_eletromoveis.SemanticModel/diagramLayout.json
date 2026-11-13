@@ -98,10 +98,36 @@
             "width": 234
           },
           "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1888.7243196748304,
+            "y": 0
+          },
+          "nodeIndex": "financeiro vw_orcamento_dia",
+          "nodeLineageTag": "adcdd4d3-cd8e-42d8-9c7a-e92b98aca239",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2156.3830500146937,
+            "y": 146
+          },
+          "nodeIndex": "Visão DRE",
+          "nodeLineageTag": "a35bd74f-f9f1-4ebc-975b-399d01d4890e",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "Todas as tabelas",
-      "zoomValue": 100,
+      "zoomValue": 79.553182037699813,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,

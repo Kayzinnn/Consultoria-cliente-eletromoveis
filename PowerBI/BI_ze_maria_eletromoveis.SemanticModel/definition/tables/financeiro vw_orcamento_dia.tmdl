@@ -1,0 +1,101 @@
+table 'financeiro vw_orcamento_dia'
+	lineageTag: adcdd4d3-cd8e-42d8-9c7a-e92b98aca239
+
+	column data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 888d85d3-2769-4b1f-a3f3-585d609b9195
+		summarizeBy: none
+		sourceColumn: data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ano
+		dataType: int64
+		formatString: 0
+		lineageTag: c8ec2698-b3ad-4bd7-844f-63bed852c17a
+		summarizeBy: none
+		sourceColumn: ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column mes
+		dataType: int64
+		formatString: 0
+		lineageTag: 27f8b50a-c50c-4712-9e72-2ec5543c8038
+		summarizeBy: none
+		sourceColumn: mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column natureza
+		dataType: string
+		lineageTag: 445e0922-cc24-48cf-b938-b65766150674
+		summarizeBy: none
+		sourceColumn: natureza
+
+		annotation SummarizationSetBy = Automatic
+
+	column grupo_dre
+		dataType: string
+		lineageTag: 30286f44-072e-43ff-b14f-c87e02715c59
+		summarizeBy: none
+		sourceColumn: grupo_dre
+
+		annotation SummarizationSetBy = Automatic
+
+	column conta
+		dataType: string
+		lineageTag: 66ed0e68-6625-4d3a-9e47-46ded4c3b746
+		summarizeBy: none
+		sourceColumn: conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column loja
+		dataType: string
+		lineageTag: 7ef84f2e-38e5-4256-821b-05d68424ed8a
+		summarizeBy: none
+		sourceColumn: loja
+
+		annotation SummarizationSetBy = Automatic
+
+	column negocio
+		dataType: string
+		lineageTag: 36beb1e9-cdb7-4608-94de-068ca154dd69
+		summarizeBy: none
+		sourceColumn: negocio
+
+		annotation SummarizationSetBy = Automatic
+
+	column criterio
+		dataType: string
+		lineageTag: 4328dc97-2b29-4cdd-86c6-e24e3c0bf64a
+		summarizeBy: none
+		sourceColumn: criterio
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor
+		dataType: double
+		lineageTag: 35c48c00-79ea-4848-83f4-5848393bbc89
+		summarizeBy: sum
+		sourceColumn: valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'financeiro vw_orcamento_dia' = m
+		mode: import
+		source =
+				let
+				  Origem = PostgreSQL.Database("localhost", "ze_maria"),
+				  #"Navegação 1" = Origem{[Schema = "financeiro", Item = "vw_orcamento_dia"]}[Data]
+				in
+				  #"Navegação 1"
+
+	annotation PBI_ResultType = Table
+

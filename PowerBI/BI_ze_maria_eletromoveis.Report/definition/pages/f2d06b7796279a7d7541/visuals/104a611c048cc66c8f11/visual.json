@@ -4,10 +4,10 @@
   "position": {
     "x": 170,
     "y": 826,
-    "z": 3200,
+    "z": 15000,
     "height": 370,
     "width": 1766,
-    "tabOrder": 3200
+    "tabOrder": 15000
   },
   "visual": {
     "visualType": "tableEx",
@@ -133,7 +133,7 @@
                     "Entity": "_Medidas"
                   }
                 },
-                "Property": "Lucro Acum"
+                "Property": "Vendas Acum"
               }
             },
             "direction": "Descending"
@@ -346,7 +346,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "1042D"
+                  "Value": "1033.9038916484853D"
                 }
               }
             }

@@ -84,6 +84,12 @@ saida\      CSVs intermediários (fora do Git)
 - A meta diária = meta do mês ÷ dias de venda (dias do mês sem domingos e sem os dias de `config\dias_sem_venda.csv`, para feriados).
 - Ficam em `vendas.meta_venda` / `vendas.vw_meta_venda_dia` e entram na fato principal com `origem = 'Meta de vendas'` (fora da DRE e do fluxo), uma linha por loja e dia de venda.
 
+**Orçamento da DRE (real x orçado)**
+- `python gerar_orcamento.py --mes AAAA-MM` grava o orçamento do mês em `financeiro.orcamento` (por conta e loja). Sem `--mes`, usa o mês atual.
+- Regra: despesas = média dos 3 meses fechados anteriores; receita líquida = meta da loja (rode `atualizar_metas.py` antes); descontos, outras receitas e CMV = % da receita líquida nesses 3 meses x meta.
+- O orçamento fica gravado: só muda se o script rodar de novo para aquele mês. `financeiro.vw_orcamento_dia` distribui por dia (receita e CMV pelos dias de venda; despesas pelos dias corridos), para comparar com o real até a data de referência.
+- No BI, página DRE: segmentação **Visão** (Real, Orçado, Desvio R$, Desvio %). Desvio = real - orçado; positivo é favorável em todas as linhas.
+
 **Lojas Ortobom (outro sistema)**
 - Vendas: vêm **direto do RP Sistema** (lojaszemaria.rpsistema.com.br), sem PDF. Rode `python baixa_vendas.py` (padrão: dia 1 do mês até ontem; ou `--inicio DD/MM/AAAA --fim DD/MM/AAAA`). O script faz login com `ERP_USUARIO`/`ERP_SENHA` do `.env`, lê da API do sistema os relatórios "produtos vendidos por data" e "produtos com margem de lucro" de cada filial (Graça, Carnaubal, Mucambo — filial nova entra sozinha), gera `saida\vendas_ORTOBOM_<LOJA>_<inicio>_<fim>\` e carrega no banco pelo `src\carregar_banco.py`; cada execução substitui o próprio período daquela loja. `--sem-banco` só gera os arquivos; `--filial 4` roda uma filial só; `--visivel` mostra o navegador. Log em `logs\`. Requer `pip install playwright python-dotenv` e `playwright install chromium`.
 - O custo de cada venda = quantidade × custo unitário do produto no relatório de margem. Produto sem custo lá entra com custo 0 (`custo_informado = false`) ou pelo `config\custo_estimado.csv`.
