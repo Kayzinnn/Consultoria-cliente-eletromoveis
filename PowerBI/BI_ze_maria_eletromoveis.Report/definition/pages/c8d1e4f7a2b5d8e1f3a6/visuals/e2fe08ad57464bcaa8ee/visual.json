@@ -263,7 +263,7 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(=) RECEITA LÍQUIDA'"
+                    "Value": "'(-) Custo da mercadoria vendida'"
                   }
                 }
               ],
@@ -273,7 +273,87 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(-) Custo da mercadoria vendida'"
+                    "Value": "'Margem operacional %'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Pró-labore'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Impostos'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Despesas financeiras'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) LUCRO LÍQUIDO'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) TOTAL DE DESPESAS OPERACIONAIS'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Despesas administrativas'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'Receita bruta de vendas'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(±) Descontos e acréscimos'"
                   }
                 }
               ],
@@ -648,6 +728,36 @@
             ],
             "metadata": "_Medidas.DRE Desvio %"
           }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Medidas"
+                        }
+                      },
+                      "Property": "Cor DRE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Medidas.DRE Orçado Mês"
+          }
         }
       ],
       "subTotals": [
@@ -777,7 +887,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "1130.252638061374D"
+                  "Value": "616.330358815971D"
                 }
               }
             }

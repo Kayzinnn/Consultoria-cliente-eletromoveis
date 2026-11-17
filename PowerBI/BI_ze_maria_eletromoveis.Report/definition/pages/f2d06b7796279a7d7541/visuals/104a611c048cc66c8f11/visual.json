@@ -346,13 +346,27 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "1033.9038916484853D"
+                  "Value": "1035.5662657753164D"
                 }
               }
             }
           },
           "selector": {
             "metadata": "financeiro vw_fato_principal.loja"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "126.66666666666667D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Medidas.Vendas Acum"
           }
         }
       ]

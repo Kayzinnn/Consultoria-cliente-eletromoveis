@@ -865,7 +865,7 @@ cultureInfo pt-BR
 			          }
 			        },
 			        {
-			          "Real": {
+			          "Realizado": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -4517,7 +4517,7 @@ cultureInfo pt-BR
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Orçado": {
+			          "Meta": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -4538,7 +4538,7 @@ cultureInfo pt-BR
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Desvio R$": {
+			          "Desvio x Meta R$": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -4560,6 +4560,27 @@ cultureInfo pt-BR
 			      "Terms": [
 			        {
 			          "Desvio %": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.dre_orçado_mês": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "DRE Orçado Mês"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Meta mês cheio": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

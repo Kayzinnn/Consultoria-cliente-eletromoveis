@@ -3,9 +3,9 @@
   "name": "4422dcd1b405b3ce4696",
   "position": {
     "x": 172.22222222222223,
-    "y": 377.77777777777777,
+    "y": 363.33333333333331,
     "z": 0,
-    "height": 830,
+    "height": 845.55555555555554,
     "width": 1760,
     "tabOrder": 0
   },
@@ -88,6 +88,21 @@
                       "Entity": "_Medidas"
                     }
                   },
+                  "Property": "DRE Orçado Mês"
+                }
+              },
+              "queryRef": "_Medidas.DRE Orçado Mês",
+              "nativeQueryRef": "Meta mês cheio",
+              "displayName": "Meta mês cheio"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
                   "Property": "DRE Desvio"
                 }
               },
@@ -124,7 +139,7 @@
                 }
               },
               "index": 0,
-              "length": 4
+              "length": 5
             }
           ]
         }
@@ -288,16 +303,6 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(=) RECEITA LÍQUIDA'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
                     "Value": "'(-) Custo da mercadoria vendida'"
                   }
                 }
@@ -328,7 +333,87 @@
               "identityValues": [
                 {
                   "Literal": {
+                    "Value": "'(=) RESULTADO OPERACIONAL'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'Margem operacional %'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) LUCRO LÍQUIDO'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
                     "Value": "'Receita bruta de vendas'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) RECEITA LÍQUIDA'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) TOTAL DE DESPESAS OPERACIONAIS'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Pró-labore'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Impostos'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Despesas financeiras'"
                   }
                 }
               ],
@@ -831,7 +916,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "1090.2787234664672D"
+                  "Value": "954.3548104092578D"
                 }
               }
             }

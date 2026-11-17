@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "759990ce4d2c15193380",
   "position": {
-    "x": 1734,
-    "y": 30,
+    "x": 1733.3333333333335,
+    "y": 31.666666666666668,
     "z": 16000,
-    "height": 66,
-    "width": 224,
+    "height": 66.666666666666671,
+    "width": 225,
     "tabOrder": 16000
   },
   "visual": {
@@ -81,7 +81,28 @@
                           [
                             {
                               "Literal": {
+                                "Value": "'setembro'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'outubro'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
                                 "Value": "'novembro'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'agosto'"
                               }
                             }
                           ]

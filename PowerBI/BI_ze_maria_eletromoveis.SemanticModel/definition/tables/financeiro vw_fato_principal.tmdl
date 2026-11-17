@@ -103,13 +103,12 @@ table 'financeiro vw_fato_principal'
 
 	column valor
 		dataType: double
+		formatString: #,0.00
 		lineageTag: c236e0a4-2c52-4ac0-9f00-bfca2fb7777d
 		summarizeBy: sum
 		sourceColumn: valor
 
 		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column entra_no_dre
 		dataType: boolean

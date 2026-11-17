@@ -95,6 +95,13 @@
                           [
                             {
                               "Literal": {
+                                "Value": "'''_Medidas''[DRE Orçado Mês]'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
                                 "Value": "'''_Medidas''[DRE Desvio]'"
                               }
                             }
@@ -152,6 +159,17 @@
                                 "0": [
                                   {
                                     "Literal": {
+                                      "Value": "'''_Medidas''[DRE Orçado Mês]'"
+                                    }
+                                  }
+                                ]
+                              }
+                            ],
+                            [
+                              {
+                                "0": [
+                                  {
+                                    "Literal": {
                                       "Value": "'''_Medidas''[DRE Desvio]'"
                                     }
                                   }
@@ -187,13 +205,16 @@
                         },
                         "valueMap": [
                           {
-                            "0": "Real"
+                            "0": "Realizado"
                           },
                           {
-                            "0": "Orçado"
+                            "0": "Meta"
                           },
                           {
-                            "0": "Desvio R$"
+                            "0": "Meta mês cheio"
+                          },
+                          {
+                            "0": "Desvio x Meta R$"
                           },
                           {
                             "0": "Desvio %"

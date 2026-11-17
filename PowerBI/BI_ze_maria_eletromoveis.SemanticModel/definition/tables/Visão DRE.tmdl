@@ -42,7 +42,8 @@ table 'Visão DRE'
 				{
 				    ("Realizado", NAMEOF('_Medidas'[DRE Valor]), 0),
 				    ("Meta", NAMEOF('_Medidas'[DRE Orçado]), 1),
-				    ("Desvio x Meta R$", NAMEOF('_Medidas'[DRE Desvio]), 2),
-				    ("Desvio %", NAMEOF('_Medidas'[DRE Desvio %]), 3)
+				    ("Meta mês cheio", NAMEOF('_Medidas'[DRE Orçado Mês]), 2),
+				    ("Desvio x Meta R$", NAMEOF('_Medidas'[DRE Desvio]), 3),
+				    ("Desvio %", NAMEOF('_Medidas'[DRE Desvio %]), 4)
 				}
 

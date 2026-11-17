@@ -44,7 +44,7 @@
               },
               "queryRef": "financeiro vw_fato_principal.categoria_produto",
               "nativeQueryRef": "categoria_produto",
-              "active": true,
+              "active": false,
               "displayName": "categoria_produto"
             },
             {
@@ -264,7 +264,7 @@
                 "Property": "Vendas Var % Ano Anterior"
               }
             },
-            "direction": "Descending"
+            "direction": "Ascending"
           }
         ]
       }
@@ -321,20 +321,7 @@
             "isPinned": true
           }
         ],
-        "root": {
-          "children": [
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'MUCAMBO'"
-                  }
-                }
-              ],
-              "isToggled": true
-            }
-          ]
-        }
+        "root": {}
       }
     ],
     "objects": {
@@ -688,6 +675,20 @@
           },
           "selector": {
             "metadata": "financeiro vw_fato_principal.loja"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "435.33335587684087D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "financeiro vw_fato_principal.descricao"
           }
         }
       ]

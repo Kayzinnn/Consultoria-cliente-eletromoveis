@@ -233,19 +233,19 @@ table _Medidas
 		displayFolder: 06 Comparativos
 		lineageTag: 19a36fd9-7e6b-45bf-a95e-f3de9fe9a581
 
-	/// Último dia do período filtrado que tem venda carregada. Base dos acumulados do painel.
+	/// Último dia do período filtrado que tem venda carregada. Corta o período filtrado até a última venda.
 	measure 'Data de Referência' = VAR _ult = CALCULATE(MAX('financeiro vw_fato_principal'[data]), REMOVEFILTERS('financeiro vw_fato_principal'), 'financeiro vw_fato_principal'[origem] = "ERP vendas") RETURN MAXX(FILTER(VALUES(d_Calendario[Date]), d_Calendario[Date] <= _ult), d_Calendario[Date])
 		formatString: dd/mm/yyyy
 		displayFolder: 07 Painel Resultados
 		lineageTag: da0db207-f614-4fb0-9ee9-d1f6febec216
 
-	/// Receita líquida de 1º de janeiro até a data de referência.
-	measure 'Vendas Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Líquida], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	/// Receita líquida do período filtrado (um mês = só o mês; vários meses = a soma deles), até a data de referência.
+	measure 'Vendas Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Líquida], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 07 Painel Resultados
 		lineageTag: 53ac7ac8-4655-4adc-8618-68da75161fb2
 
-	measure 'Vendas Acum Ano Anterior' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Líquida], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+	measure 'Vendas Acum Ano Anterior' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Receita Líquida], DATEADD(FILTER(VALUES(d_Calendario[Date]), d_Calendario[Date] <= _ref), -1, YEAR), REMOVEFILTERS(d_Calendario)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 07 Painel Resultados
 		lineageTag: 800a6786-6044-47b3-9361-8309b1b2f781
@@ -254,18 +254,18 @@ table _Medidas
 		displayFolder: 07 Painel Resultados
 		lineageTag: 7c16ae46-5353-48a9-adb4-85060ce929a1
 
-	measure 'Lucro Bruto Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Lucro Bruto], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Lucro Bruto Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Lucro Bruto], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 07 Painel Resultados
 		lineageTag: 59af4d43-bf5b-4725-9026-cfde39947f35
 
-	/// Margem bruta acumulada: o que sobra da venda após o custo dos produtos.
+	/// Margem bruta do período filtrado: o que sobra da venda após o custo dos produtos.
 	measure 'Ganho na Venda Acum %' = DIVIDE([Lucro Bruto Acum], [Vendas Acum])
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 07 Painel Resultados
 		lineageTag: 11e97c97-2e1d-4e46-9a85-678bc2bd9eea
 
-	measure 'Ganho na Venda Acum % Ano Anterior' = DIVIDE(VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Lucro Bruto], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario))), [Vendas Acum Ano Anterior])
+	measure 'Ganho na Venda Acum % Ano Anterior' = DIVIDE(VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Lucro Bruto], DATEADD(FILTER(VALUES(d_Calendario[Date]), d_Calendario[Date] <= _ref), -1, YEAR), REMOVEFILTERS(d_Calendario))), [Vendas Acum Ano Anterior])
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 07 Painel Resultados
 		lineageTag: 08f2ec06-d2b8-4cef-b32b-06073083a00c
@@ -275,7 +275,7 @@ table _Medidas
 		lineageTag: 59f064bd-c017-4f2e-8446-c11b8afbb841
 
 	/// Custo das trocas e devoluções (o ERP não informa quebra/furto).
-	measure 'Perdas Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV - trocas e devoluções"), DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Perdas Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV - trocas e devoluções"), KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 07 Painel Resultados
 		lineageTag: e8d2eaad-32f6-4fab-9182-b8a08d2b4334
@@ -285,7 +285,7 @@ table _Medidas
 		lineageTag: 58297f51-1678-4686-a2fa-2375b4fe0676
 
 	/// Despesas operacionais do caixa (positivo).
-	measure 'Despesas da Loja Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Despesas Operacionais], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Despesas da Loja Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Despesas Operacionais], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 07 Painel Resultados
 		lineageTag: 54374257-7105-4838-bce4-f6b5ec78e849
@@ -294,7 +294,7 @@ table _Medidas
 		displayFolder: 07 Painel Resultados
 		lineageTag: 17830b78-8786-4786-a94a-807bf8736d66
 
-	measure 'Lucro Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Lucro Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 07 Painel Resultados
 		lineageTag: 733a3a97-d359-4810-941f-0af1327277c2
@@ -317,8 +317,8 @@ table _Medidas
 		displayFolder: 07 Painel Resultados
 		lineageTag: 515c403a-14b8-4de5-b149-0e029f72076b
 
-	/// Valor de cada linha da DRE no acumulado (cascata).
-	measure 'DRE Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	/// Valor de cada linha da DRE no período filtrado (cascata).
+	measure 'DRE Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 07 Painel Resultados
 		lineageTag: 7276d617-bb3f-4eb5-9b33-200ba8b3d282
@@ -335,24 +335,24 @@ table _Medidas
 		displayFolder: 07 Painel Resultados
 		lineageTag: c53c5b11-31b3-4d23-939e-209aec32dc42
 
-	measure 'Qtd Vendida Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Qtd Vendida], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Qtd Vendida Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Qtd Vendida], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: #,##0
 		displayFolder: 08 Vendas Analítico
 		lineageTag: ffd99610-f106-4bdc-b45d-e1dd4e4c6e7a
 
-	measure 'Receita Bruta Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Faturamento], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Receita Bruta Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Faturamento], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 08 Vendas Analítico
 		lineageTag: 2b9b5948-b854-4c1e-bd58-068c29a0f059
 
 	/// Negativo = desconto concedido; positivo = acréscimo (ex.: juros do crediário).
-	measure 'Descontos Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Descontos e Acréscimos], DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'Descontos Acum' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Descontos e Acréscimos], KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 08 Vendas Analítico
 		lineageTag: 4c76a21e-eeba-452e-a811-add2601833b5
 
 	/// Custo dos produtos vendidos (positivo), sem trocas/devoluções.
-	measure 'CMV Produtos Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV"), DATESBETWEEN(d_Calendario[Date], DATE(YEAR(_ref), 1, 1), _ref), REMOVEFILTERS(d_Calendario)))
+	measure 'CMV Produtos Acum' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV"), KEEPFILTERS(d_Calendario[Date] <= _ref)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 08 Vendas Analítico
 		lineageTag: 67090f19-68f1-407e-be9c-ed87fd9090f2
@@ -388,7 +388,7 @@ table _Medidas
 		displayFolder: 08 Vendas Analítico
 		lineageTag: 205f60f2-a0ba-441c-8649-4fea02a78901
 
-	measure 'Perdas Acum Ano Anterior' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV - trocas e devoluções"), DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+	measure 'Perdas Acum Ano Anterior' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE(CALCULATE(SUM('financeiro vw_fato_principal'[valor]), 'financeiro vw_fato_principal'[conta] = "CMV - trocas e devoluções"), DATEADD(FILTER(VALUES(d_Calendario[Date]), d_Calendario[Date] <= _ref), -1, YEAR), REMOVEFILTERS(d_Calendario)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 09 Cards HTML
 		lineageTag: 3606f5a1-791d-4d13-bf10-66d7cfdc7fe2
@@ -403,12 +403,12 @@ table _Medidas
 		displayFolder: 09 Cards HTML
 		lineageTag: 222928af-9959-48dc-8be5-4187076be005
 
-	measure 'Despesas da Loja Acum Ano Anterior' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Despesas Operacionais], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+	measure 'Despesas da Loja Acum Ano Anterior' = -VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Despesas Operacionais], DATEADD(FILTER(VALUES(d_Calendario[Date]), d_Calendario[Date] <= _ref), -1, YEAR), REMOVEFILTERS(d_Calendario)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 09 Cards HTML
 		lineageTag: f1d0f9fc-4470-4d75-bccb-ae02f136acce
 
-	measure 'Lucro Acum Ano Anterior' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], DATESBETWEEN(d_Calendario[Date], EDATE(DATE(YEAR(_ref), 1, 1), -12), EDATE(_ref, -12)), REMOVEFILTERS(d_Calendario)))
+	measure 'Lucro Acum Ano Anterior' = VAR _ref = [Data de Referência] RETURN IF(NOT ISBLANK(_ref), CALCULATE([Resultado], DATEADD(FILTER(VALUES(d_Calendario[Date]), d_Calendario[Date] <= _ref), -1, YEAR), REMOVEFILTERS(d_Calendario)))
 		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
 		displayFolder: 09 Cards HTML
 		lineageTag: 420e890a-f361-4e67-9007-568c82343e16
@@ -697,6 +697,19 @@ table _Medidas
 			        "O que aconteceu em " & _mes & " comparado com a meta"
 			    )
 		lineageTag: 1c539264-307c-4eeb-9acd-529bec7ee9c6
+
+	/// Orçamento do mês inteiro (sem cortar na data de referência), respeitando o filtro de loja.
+	measure 'Orçado Base Mês' = IF(ISFILTERED('financeiro vw_fato_principal'[loja]), CALCULATE(SUM('financeiro vw_orcamento_dia'[valor]), TREATAS(VALUES('financeiro vw_fato_principal'[loja]), 'financeiro vw_orcamento_dia'[loja])), SUM('financeiro vw_orcamento_dia'[valor]))
+		formatString: \R$ #,##0;-\R$ #,##0;\R$ #,##0
+		displayFolder: 13 Orçamento
+		lineageTag: f448edb5-898d-4d0c-87b7-ecc1db75ab1b
+
+	/// Orçado de cada linha da DRE para o mês cheio (ex.: novembro inteiro = meta de R$ 340 mil).
+	measure 'DRE Orçado Mês' = VAR _tipo = SELECTEDVALUE(d_DRE[Tipo]) VAR _grupo = SELECTEDVALUE(d_DRE[Grupo]) VAR _rl = CALCULATE([Orçado Base Mês], 'financeiro vw_orcamento_dia'[natureza] = "Receita") VAR _lb = CALCULATE([Orçado Base Mês], 'financeiro vw_orcamento_dia'[natureza] IN {"Receita", "Custo"}) VAR _desp_op = CALCULATE([Orçado Base Mês], 'financeiro vw_orcamento_dia'[natureza] = "Despesa", NOT 'financeiro vw_orcamento_dia'[grupo_dre] IN {"Pró-labore", "Impostos", "Despesas financeiras"}) RETURN SWITCH(_tipo, "grupo", CALCULATE([Orçado Base Mês], 'financeiro vw_orcamento_dia'[grupo_dre] = _grupo), "receita_liquida", _rl, "lucro_bruto", _lb, "margem_bruta", DIVIDE(_lb, _rl), "despesas_op", _desp_op, "resultado_op", _lb + _desp_op, "margem_operacional", DIVIDE(_lb + _desp_op, _rl), "despesas", CALCULATE([Orçado Base Mês], 'financeiro vw_orcamento_dia'[natureza] = "Despesa"), "resultado", [Orçado Base Mês], "margem_liquida", DIVIDE([Orçado Base Mês], _rl))
+		displayFolder: 13 Orçamento
+		lineageTag: 36181307-dad3-41f8-98cc-c38d49bb9ef2
+
+		formatStringDefinition = IF(SELECTEDVALUE(d_DRE[Tipo]) IN {"margem_bruta", "margem_operacional", "margem_liquida"}, "0.0%;-0.0%;0.0%", "\R$ #,##0;-\R$ #,##0;\R$ #,##0")
 
 	column _
 		isHidden
