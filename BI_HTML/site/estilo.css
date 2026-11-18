@@ -81,6 +81,11 @@ h1 { font-size: 34px; font-weight: 800; letter-spacing: -.03em; margin: 0 0 6px;
 .menu .acoes { display: flex; gap: 6px; padding: 6px 4px 8px; border-bottom: 1px solid var(--borda); margin-bottom: 6px; }
 .menu .acoes button { flex: 1; font: inherit; font-size: 12px; font-weight: 700; border: 0; background: var(--fundo); border-radius: 8px; padding: 6px; cursor: pointer; color: var(--texto2); }
 
+.tamanho { display: flex; height: 50px; background: var(--cartao); border: 1px solid var(--borda); border-radius: 12px; box-shadow: var(--sombra); overflow: hidden; }
+.tamanho button { border: 0; background: transparent; font: inherit; font-weight: 800; color: var(--texto); padding: 0 14px; cursor: pointer; }
+.tamanho button:hover { background: var(--fundo); }
+.tamanho button + button { border-left: 1px solid var(--borda); }
+.tamanho .menor { font-size: 13px; } .tamanho .maior { font-size: 18px; }
 .chips { display: inline-flex; background: #E4E7EF; border-radius: 12px; padding: 4px; gap: 2px; flex-wrap: wrap; }
 .chips button { border: 0; background: transparent; font: inherit; font-size: 13px; font-weight: 700; color: var(--texto2); padding: 8px 14px; border-radius: 9px; cursor: pointer; }
 .chips button.on { background: #fff; color: var(--texto); box-shadow: 0 1px 3px rgba(17, 24, 39, .12); }
@@ -116,9 +121,9 @@ h1 { font-size: 34px; font-weight: 800; letter-spacing: -.03em; margin: 0 0 6px;
 /* ---------- tabelas e matrizes ---------- */
 .rolagem { overflow: auto; max-width: 100%; }
 .rolagem.alta { max-height: 70vh; }
-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: var(--fs-tab, 13.5px); font-variant-numeric: tabular-nums; }
 th {
-  position: sticky; top: 0; z-index: 2; background: #F7F8FB; color: var(--texto2); font-size: 12px; font-weight: 700;
+  position: sticky; top: 0; z-index: 2; background: #F7F8FB; color: var(--texto2); font-size: calc(var(--fs-tab, 13.5px) - 1.5px); font-weight: 700;
   text-align: right; padding: 12px 14px; border-bottom: 1px solid var(--borda); white-space: nowrap;
 }
 th:first-child, td:first-child { text-align: left; position: sticky; left: 0; z-index: 1; }
@@ -127,6 +132,7 @@ td { padding: 10px 14px; border-bottom: 1px solid #F0F1F5; text-align: right; wh
 td:first-child { max-width: 380px; overflow: hidden; text-overflow: ellipsis; }
 tr:hover td { background: #F9FAFC; }
 tr.total td { font-weight: 800; background: #F7F8FB; border-top: 1px solid var(--borda); }
+.bloco table tr.sub, table tr.sub { font-size: inherit; color: inherit; margin: 0; }
 tr.sub td { color: var(--navy); font-weight: 800; background: #FAFBFD; }
 tr.margem td { color: var(--texto3); font-style: italic; }
 tr.resultado td { font-weight: 800; }

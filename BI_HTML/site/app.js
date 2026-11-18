@@ -83,6 +83,18 @@
   }
   document.addEventListener("click", () => { if (document.querySelector(".menu")) { document.querySelectorAll(".menu").forEach((m) => m.remove()); } });
 
+  // Tamanho da letra das tabelas (A− / A+), lembrado no navegador
+  const TAMANHOS = [11, 12, 13.5, 15, 16.5, 18, 20];
+  let iFonte = 2;
+  try { const v = parseInt(localStorage.getItem("bi_fonte"), 10); if (v >= 0 && v < TAMANHOS.length) iFonte = v; } catch (e) { /* sem armazenamento */ }
+  const aplicarFonte = () => document.documentElement.style.setProperty("--fs-tab", TAMANHOS[iFonte] + "px");
+  function mudarFonte(d) {
+    iFonte = Math.max(0, Math.min(TAMANHOS.length - 1, iFonte + d));
+    aplicarFonte();
+    try { localStorage.setItem("bi_fonte", String(iFonte)); } catch (e) { /* ok */ }
+  }
+  aplicarFonte();
+
   function desenharFiltros() {
     const box = $("#filtros"); box.innerHTML = "";
     const anos = []; for (let y = M.anoMax; y >= M.anoMin; y--) anos.push({ v: y, t: String(y) });
@@ -92,6 +104,10 @@
     box.appendChild(filtro("Ano", anos, M.estado.anos, true, mudar));
     box.appendChild(filtro("Filial", lojas, M.estado.lojas, false, mudar));
     box.appendChild(filtro("Mês", meses, M.estado.meses, false, mudar));
+    const tam = h("div", { class: "tamanho", title: "Tamanho da letra das tabelas" }, `<button type="button" class="menor" aria-label="Diminuir letra das tabelas">A−</button><button type="button" class="maior" aria-label="Aumentar letra das tabelas">A+</button>`);
+    tam.querySelector(".menor").onclick = () => mudarFonte(-1);
+    tam.querySelector(".maior").onclick = () => mudarFonte(1);
+    box.appendChild(tam);
   }
 
   // ---------- textos do período ----------
