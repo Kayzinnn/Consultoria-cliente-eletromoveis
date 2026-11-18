@@ -79,3 +79,10 @@ O site fica em `https://painel-zemaria.pages.dev` e só abre para os e-mails aut
 ### Dia a dia
 
 Depois de atualizar o banco, rode `BI_HTML\publicar.bat`. Ele exporta os dados e publica. Para incluir ou tirar alguém, edite a lista de e-mails da policy no Zero Trust.
+
+### Como está configurado hoje
+
+- Site: `https://painel-zemaria.pages.dev` (projeto Pages `painel-zemaria`).
+- Zero Trust (plano Free), equipe `rough-dew-5d7a`. Aplicação de Access `painel-zemaria - Cloudflare Pages` protegendo `painel-zemaria.pages.dev` e `*.painel-zemaria.pages.dev`.
+- Regras: `Allow Members` (membros da conta Cloudflare) e `Colaboradores Ze&Maria` (lista de e-mails). Para incluir alguém: Zero Trust › Access controls › Policies › Colaboradores Ze&Maria › Edit.
+- Login por código no e-mail (One-time PIN). Atenção: o código **não chegou em endereço Hotmail** no teste; no Gmail funcionou. Para quem usa Hotmail, usar outro e-mail ou configurar login com conta Microsoft.
