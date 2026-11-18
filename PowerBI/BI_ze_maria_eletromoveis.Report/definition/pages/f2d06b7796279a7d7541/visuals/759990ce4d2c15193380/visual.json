@@ -81,28 +81,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'setembro'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'outubro'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
                                 "Value": "'novembro'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'agosto'"
                               }
                             }
                           ]

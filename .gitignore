@@ -21,3 +21,7 @@ venv/
 
 # Logs do baixa_vendas.py
 logs/
+
+# BI em HTML: arquivo gerado com os dados da cliente (nunca versionar)
+BI_HTML/site/dados/
+.wrangler/

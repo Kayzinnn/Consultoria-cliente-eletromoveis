@@ -45,6 +45,36 @@
               "queryRef": "financeiro vw_fato_principal.loja",
               "nativeQueryRef": "loja",
               "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "financeiro vw_fato_principal"
+                    }
+                  },
+                  "Property": "grupo_produto"
+                }
+              },
+              "queryRef": "financeiro vw_fato_principal.grupo_produto",
+              "nativeQueryRef": "grupo_produto",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "financeiro vw_fato_principal"
+                    }
+                  },
+                  "Property": "descricao"
+                }
+              },
+              "queryRef": "financeiro vw_fato_principal.descricao",
+              "nativeQueryRef": "descricao",
+              "active": false
             }
           ]
         },
@@ -204,21 +234,49 @@
               "financeiro vw_fato_principal.loja"
             ],
             "isCollapsed": true,
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "financeiro vw_fato_principal"
+                    }
+                  },
+                  "Property": "loja"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "financeiro vw_fato_principal.grupo_produto"
+            ],
+            "isCollapsed": true,
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "financeiro vw_fato_principal"
+                    }
+                  },
+                  "Property": "grupo_produto"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "financeiro vw_fato_principal.descricao"
+            ],
+            "isCollapsed": true,
             "isPinned": true
           }
         ],
         "root": {
           "children": [
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'Margem bruta %'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
             {
               "identityValues": [
                 {
@@ -243,16 +301,6 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(-) Despesas de ocupação'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
                     "Value": "'Margem líquida %'"
                   }
                 }
@@ -264,16 +312,6 @@
                 {
                   "Literal": {
                     "Value": "'(=) RESULTADO DO EXERCÍCIO'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'(=) LUCRO BRUTO'"
                   }
                 }
               ],
@@ -313,16 +351,6 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(±) Descontos e acréscimos'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
                     "Value": "'(-) Despesas administrativas'"
                   }
                 }
@@ -333,57 +361,7 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(=) RESULTADO OPERACIONAL'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'Margem operacional %'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
                     "Value": "'(=) LUCRO LÍQUIDO'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'Receita bruta de vendas'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'(=) RECEITA LÍQUIDA'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "'(=) TOTAL DE DESPESAS OPERACIONAIS'"
                   }
                 }
               ],
@@ -414,6 +392,96 @@
                 {
                   "Literal": {
                     "Value": "'(-) Despesas financeiras'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'Receita bruta de vendas'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) LUCRO BRUTO'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(±) Descontos e acréscimos'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'Margem bruta %'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'Margem operacional %'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Despesas de ocupação'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) RESULTADO OPERACIONAL'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) RECEITA LÍQUIDA'"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(=) TOTAL DE DESPESAS OPERACIONAIS'"
                   }
                 }
               ],
@@ -1088,5 +1156,121 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "43d503e5315514860466",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "d_DRE"
+              }
+            },
+            "Property": "Linha"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "6dd384df639771908994",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "financeiro vw_fato_principal"
+              }
+            },
+            "Property": "loja"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "9c472b10300504549307",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "DRE Valor"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "229aeb81ab1c89501380",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "DRE Orçado"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "c42747f93bcb54508dbe",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "DRE Orçado Mês"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8e0bb6673546e2e02703",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "DRE Desvio"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "04d7d89505849eb3de79",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "DRE Desvio %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "6e17ca552a7d60ba2cd2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "financeiro vw_fato_principal"
+              }
+            },
+            "Property": "grupo_produto"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

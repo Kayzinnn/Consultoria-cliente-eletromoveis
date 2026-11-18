@@ -1,4 +1,5 @@
 prioridade;padrao;conta;grupo_dre;entra_no_dre
+5;TOP[AÁ]ZIO;Fornecedores de mercadoria;Compras de mercadoria;0
 10;PESSOAL|\mCASA\M|\mCPF\M|COLEGIO|COLÉGIO|ESCOLA|LIVROS|INJECAO|INJEÇÃO|DEP\.?JUNIOR|BLACK|\mDRA\M|HORMON;Despesas pessoais dos sócios;Não operacional - sócios;0
 12;\mPOLO\M|TERESINA|KAUAN;Despesas pessoais (Polo / Teresina - filho);Não operacional - sócios;0
 15;^COMPRA (HILUX|CARRO|MOTO|VEICULO|VEÍCULO|TERRENO|IMOVEL|IMÓVEL);Compra de veículo / imobilizado;Investimentos;0
