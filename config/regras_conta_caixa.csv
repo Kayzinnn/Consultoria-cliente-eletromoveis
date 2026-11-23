@@ -70,3 +70,15 @@ prioridade;padrao;conta;grupo_dre;entra_no_dre
 1;^\s*NEWSEDAN LIMPADOR DO PARABRISA\s*$;Veículos e combustível;Despesas logísticas;1
 1;^\s*TENDAS\s*$;Despesas pessoais dos sócios;Não operacional - sócios;0
 1;^\s*VICTOR VIDEO E FOTOS\s*$;Marketing, brindes e eventos;Despesas administrativas;1
+3;CHEQUE JUNIOR CADEIRA;Fornecedores de mercadoria;Compras de mercadoria;0
+3;ALMO[CÇ]O L[IÍ]DERES|CARATININGA;Despesas gerais;Despesas administrativas;1
+3;FARDAMENTO|ART MALHA;Marketing, brindes e eventos;Despesas administrativas;1
+3;POUSADA KANTO;Despesas pessoais dos sócios;Não operacional - sócios;0
+3;SISTEMA GUILHERME;Serviços administrativos (contador, sistemas);Despesas administrativas;1
+3;ELSYS;Fornecedores de mercadoria;Compras de mercadoria;0
+3;PANTHEON|TREINAMENTO;Treinamento da equipe;Despesas com pessoal;1
+3;UNIMED|PLANO DE SA[UÚ]DE;Despesas pessoais dos sócios;Não operacional - sócios;0
+3;\mTENDA\M;Despesas pessoais dos sócios;Não operacional - sócios;0
+3;C[AÂ]MERAS? EVERARDO|EVERARDO;Manutenção e melhorias das lojas;Despesas de ocupação;1
+2;TRANSFER[EÊ]NCIA VER[OÔ]NICA;Despesas pessoais dos sócios;Não operacional - sócios;0
+3;REGINALDO|ILUMINA[CÇ][AÃ]O LJ MUC;Manutenção e melhorias das lojas;Despesas de ocupação;1

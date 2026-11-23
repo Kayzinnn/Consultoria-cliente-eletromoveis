@@ -36,11 +36,13 @@ def ler_env():
 
 SQL = """
 WITH base AS (
-    SELECT natureza, grupo_dre, conta, loja, negocio, origem, sum(valor) AS valor
+    -- negocio fica fora do agrupamento: a mesma loja pode ter despesa lançada nas duas
+    -- planilhas (ex.: regra sem negocio), e o orçamento é único por conta x loja.
+    SELECT natureza, grupo_dre, conta, loja, min(negocio) AS negocio, origem, sum(valor) AS valor
     FROM financeiro.vw_fato_principal
     WHERE entra_no_dre AND data >= %(ini)s AND data < %(alvo)s
       AND origem IN ('ERP vendas', 'Caixa diário')
-    GROUP BY 1, 2, 3, 4, 5, 6
+    GROUP BY natureza, grupo_dre, conta, loja, origem
 ), rl AS (            -- receita líquida da base por loja
     SELECT loja, sum(valor) AS rl FROM base WHERE origem = 'ERP vendas' AND natureza = 'Receita' GROUP BY 1
 ), meta AS (

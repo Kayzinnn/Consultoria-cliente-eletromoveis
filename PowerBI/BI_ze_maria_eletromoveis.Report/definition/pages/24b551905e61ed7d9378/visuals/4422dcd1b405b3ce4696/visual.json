@@ -59,7 +59,7 @@
               },
               "queryRef": "financeiro vw_fato_principal.grupo_produto",
               "nativeQueryRef": "grupo_produto",
-              "active": false
+              "active": true
             },
             {
               "field": {
@@ -74,7 +74,7 @@
               },
               "queryRef": "financeiro vw_fato_principal.descricao",
               "nativeQueryRef": "descricao",
-              "active": false
+              "active": true
             }
           ]
         },
@@ -281,16 +281,6 @@
               "identityValues": [
                 {
                   "Literal": {
-                    "Value": "'(-) Despesas a classificar'"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
                     "Value": "'(-) Despesas logísticas'"
                   }
                 }
@@ -486,6 +476,39 @@
                 }
               ],
               "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "'(-) Despesas a classificar'"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "identityValues": [
+                    {
+                      "Literal": {
+                        "Value": "'MUCAMBO'"
+                      }
+                    }
+                  ],
+                  "isToggled": true,
+                  "children": [
+                    {
+                      "identityValues": [
+                        {
+                          "Literal": {
+                            "Value": "null"
+                          }
+                        }
+                      ],
+                      "isToggled": true
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
